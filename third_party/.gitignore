@@ -4,5 +4,7 @@ libressl
 boringssl
 gnutls
 nss
+deps
+downloads
 # Ignore generated binaries & config
 instroot
