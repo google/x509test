@@ -23,6 +23,7 @@ deps:
 cfg-openssl: openssl/Makefile
 openssl/Makefile: openssl/config
 	cd openssl && ./config --prefix=$(INSTROOT) --openssldir=$(CFGROOT)/openssl
+	cd openssl && $(MAKE) depend
 bld-openssl: openssl/apps/openssl
 openssl/apps/openssl: openssl/Makefile
 	cd openssl && $(MAKE)
