@@ -1,0 +1,8 @@
+# Ignore pulled source code
+openssl
+libressl
+boringssl
+gnutls
+nss
+# Ignore generated binaries & config
+instroot
