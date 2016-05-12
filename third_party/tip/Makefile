@@ -4,11 +4,11 @@ all: inst
 
 
 # Set up source trees
-src: src-openssl src-boringssl src-gnutls # src-libressl src-nss src-gnutls src-wolfssl src-mbedtls src-matrixssl src-nqsbtls
+src: src-openssl src-boringssl src-gnutls src-nss # src-libressl src-nss src-gnutls src-wolfssl src-mbedtls src-matrixssl src-nqsbtls
 # Build
-bld: bld-openssl bld-boringssl bld-gnutls
+bld: bld-openssl bld-boringssl bld-gnutls bls-nss
 # Install to local dir
-inst: inst-openssl inst-boringssl inst-gnutls
+inst: inst-openssl inst-boringssl inst-gnutls inst-nss
 
 # Where to install build binaries/libraries etc.
 INSTROOT=$(CURDIR)/instroot
@@ -145,4 +145,39 @@ instroot/lib/libnettle.a: deps/$(NETTLE_VERSION)/libnettle.a
 	cd deps/$(NETTLE_VERSION) && $(MAKE) install
 
 
-
+####################################
+# NSS
+####################################
+NSS_REPO=https://hg.mozilla.org/projects/nss
+NSPR_REPO=https://hg.mozilla.org/projects/nspr
+nss:
+	mkdir -p $@
+nss/nspr: | nss
+	cd nss && hg clone $(NSPR_REPO)
+nss/nss: | nss
+	cd nss && hg clone $(NSS_REPO)
+src-nss: | nss/nss nss/nspr
+NSS_VARS=BUILD_OPT=1 USE_64=1
+# Deduce the build subdirectory
+OS_ARCH := $(subst /,_,$(shell uname -s))
+OS_RELEASE := $(shell uname -r)
+OS_RELEASE := $(shell echo $(OS_RELEASE) | sed 's/-.*//')
+ifeq ($(OS_ARCH),Linux)
+    OS_RELEASE := $(subst ., ,$(OS_RELEASE))
+    ifneq ($(words $(OS_RELEASE)),1)
+	OS_RELEASE := $(word 1,$(OS_RELEASE)).$(word 2,$(OS_RELEASE))
+    endif
+endif
+NSS_BLD_SUBDIR=$(OS_ARCH)$(OS_RELEASE)_x86_64_cc_glibc_PTH_64_OPT.OBJ
+bld-nss: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil
+nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil : | nss/nss nss/nspr
+	cd nss/nss && $(NSS_VARS) $(MAKE) nss_build_all
+inst-nss: instroot/bin/certutil
+NSS_LIBS=libsmime3.so libnss3.so libnssutil3.so libplc4.so libplds4.so libnspr4.so
+NSS_BLD_LIBS=$(addprefix nss/dist/$(NSS_BLD_SUBDIR)/lib/,$(NSS_LIBS))
+NSS_INST_LIBS=$(addprefix instroot/lib/,$(NSS_LIBS))
+instroot/bin/certutil: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil $(NSS_INST_LIBS)
+	cp $< $@
+instroot/lib/%.so: nss/dist/$(NSS_BLD_SUBDIR)/lib/%.so
+	cp $< $@
+# Note that LD_LIBRARY_PATH=instroot/lib is needed to use the build binaries.
