@@ -1,3 +1,6 @@
+# Pre-requisite software (by Debian package name)
+PREREQS=autopoint autogen cmake
+
 # Where to install build binaries/libraries etc.
 INSTROOT=$(CURDIR)/instroot
 instroot:
@@ -120,7 +123,7 @@ inst-nss: instroot/bin/certutil
 NSS_LIBS=libsmime3.so libnss3.so libnssutil3.so libplc4.so libplds4.so libnspr4.so
 NSS_BLD_LIBS=$(addprefix nss/dist/$(NSS_BLD_SUBDIR)/lib/,$(NSS_LIBS))
 NSS_INST_LIBS=$(addprefix instroot/lib/,$(NSS_LIBS))
-instroot/bin/certutil: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil $(NSS_INST_LIBS)
+instroot/bin/certutil: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil | $(NSS_INST_LIBS)
 	cp $< $@
 instroot/lib/%.so: nss/dist/$(NSS_BLD_SUBDIR)/lib/%.so
 	cp $< $@

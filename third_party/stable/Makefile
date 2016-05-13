@@ -29,6 +29,7 @@ $(OPENSSL_VERSION): downloads/$(OPENSSL_TARBALL)
 	rm $(OPENSSL_VERSION)/Makefile  # Force re-config
 openssl: | $(OPENSSL_VERSION)
 	ln -s $(OPENSSL_VERSION) $@
+openssl/config: | openssl
 src-openssl: openssl/config
 
 ####################################
@@ -56,7 +57,8 @@ $(GNUTLS_VERSION)/configure: downloads/$(GNUTLS_TARBALL)
 	touch $@
 gnutls: $(GNUTLS_VERSION)/configure
 	ln -s $(GNUTLS_VERSION) $@
-src-gnutls: gnutls
+gnutls/configure: | gnutls
+src-gnutls: gnutls/configure
 
 ####################################
 # NSS
@@ -70,4 +72,5 @@ $(NSS_VERSION): downloads/$(NSS_TARBALL)
 	tar xf $<
 nss: $(NSS_VERSION)
 	ln -s $(NSS_VERSION) nss
-src-nss: nss
+nss/nss: | nss
+src-nss: nss/nss

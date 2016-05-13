@@ -2,6 +2,7 @@
 all: inst
 include ../common/Makefile
 
+
 # Set up source trees
 src: src-openssl src-boringssl src-gnutls src-nss # src-libressl src-nss src-gnutls src-wolfssl src-mbedtls src-matrixssl src-nqsbtls
 # Build
@@ -52,10 +53,11 @@ GNUTLS_BRANCH=master
 GNUTLS_PATCHES=$(wildcard $(CURDIR)/patches/gnutls/*.patch)
 gnutls:
 	mkdir -p $@
-gnutls/configure: | gnutls
+gnutls/GNUmakefile: | gnutls
 	git clone $(GNUTLS_REPO) gnutls
 	cd gnutls && git checkout $(GNUTLS_BRANCH)
 	cd gnutls && if [ ! -z "$(GNUTLS_PATCHES)" ]; then git am $(GNUTLS_PATCHES); fi
+gnutls/configure: | gnutls/GNUmakefile
 	cd gnutls && make bootstrap
 src-gnutls: gnutls/configure
 sync-gnutls:
