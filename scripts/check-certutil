@@ -1,0 +1,24 @@
+#!/bin/sh
+# Wrapper for certtool, to ensure a validation result is recorded
+CERTUTIL=$1
+CERT=$2
+# Import the cert into the NSS database, which can fail for invalid certs
+OUTPUT=`$CERTUTIL -A -d nss-db -n "Cert from $CERT" -t ,, -i $CERT`
+RESULT=$?
+if [ $RESULT != 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+    exit
+fi
+# Perform explicit validation.
+OUTPUT=`$CERTUTIL -V -d nss-db -n "Cert from $CERT" -u V,,`
+RESULT=$?
+# Remove the cert
+certutil -D -d nss-db -n "Cert from $CERT"
+
+# Now output results.
+echo "$OUTPUT"
+if [ $RESULT != 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+else
+    echo "TLS-VALIDATION: Success"
+fi

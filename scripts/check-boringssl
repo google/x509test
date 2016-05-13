@@ -1,0 +1,13 @@
+#!/bin/sh
+# Wrapper for boringssl, to ensure a validation result is recorded
+BORINGSSL=$1
+shift
+OUTPUT=`$BORINGSSL $*`
+RESULT=$?
+echo "$OUTPUT"
+if [ $RESULT -ne 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+else
+    echo "TLS-VALIDATION: Success"
+fi
+

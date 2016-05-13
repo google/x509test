@@ -1,0 +1,13 @@
+#!/bin/sh
+# Wrapper for openssl, to ensure a validation result is recorded
+OPENSSL=$1
+shift
+OUTPUT=`$OPENSSL $*`
+RESULT=$?
+echo "$OUTPUT"
+if [ $RESULT -ne 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+else
+    echo "TLS-VALIDATION: Success"
+fi
+

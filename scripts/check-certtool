@@ -1,0 +1,21 @@
+#!/bin/sh
+# Wrapper for certtool, to ensure a validation result is recorded
+CERTTOOL=$1
+shift
+OUTPUT=`$CERTTOOL $*`
+RESULT=$?
+echo "$OUTPUT"
+if [ $RESULT -ne 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+    exit
+fi
+
+# If exit code is 0 but the output includes a verification failure,
+# map to a failing exit code
+FAILED=`echo $OUTPUT | grep "Chain verification output: Not verified"`
+if [ "$FAILED" != "" ]; then
+    echo "TLS-VALIDATION: Failed"
+else
+    echo "TLS-VALIDATION: Success"
+fi
+
