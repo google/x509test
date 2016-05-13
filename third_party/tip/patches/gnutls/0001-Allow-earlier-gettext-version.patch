@@ -1,0 +1,26 @@
+From 08a346400c17ac72009f07d565de7da49cd073d7 Mon Sep 17 00:00:00 2001
+From: David Drysdale <drysdale@google.com>
+Date: Thu, 12 May 2016 11:07:34 +0100
+Subject: [PATCH] Allow earlier gettext version
+
+Allow 0.18 rather than 0.19
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index ec08be8..e3cc79d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -209,7 +209,7 @@ AM_CONDITIONAL(ENABLE_TESTS, test "$enable_tests" != "no")
+ 
+ GTK_DOC_CHECK(1.1)
+ AM_GNU_GETTEXT([external])
+-AM_GNU_GETTEXT_VERSION([0.19])
++AM_GNU_GETTEXT_VERSION([0.18])
+ 
+ AC_C_BIGENDIAN
+ 
+-- 
+1.9.1
+
