@@ -1,0 +1,24 @@
+#!/bin/sh
+EXPECT=$1
+TLS=$2
+TOOL=$3
+if [ "$EXPECT" = "Valid" ]; then
+    if [ "$TOOL" = "" ]; then
+        echo "*** Valid certificates that failed validation:"
+    else
+        echo "*** Valid certificates that failed $TOOL validation:"
+    fi
+    RESULTS=`grep -l "TLS-VALIDATION: Failed" results/*/$TLS/ok-*`
+else
+    if [ "$TOOL" = "" ]; then
+        echo "*** Invalid certificates that passed validation:"
+    else
+        echo "*** Invalid certificates that passed $TOOL validation:"
+    fi
+    RESULTS=`grep -l "TLS-VALIDATION: Success" results/*/$TLS/xf-*`
+fi
+for case in $RESULTS
+do
+    echo $case | sed 's!results/\(.*\)/'$TLS'/\(.*\)\.out!    \1    \2!'
+done
+exit 0

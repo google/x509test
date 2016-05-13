@@ -54,39 +54,29 @@ all: check
 
 check: $(RESULTS) check-ok check-xf
 check-ok:
-	@echo "*** Valid certificates that failed validation:"
-	@grep "TLS-VALIDATION: Failed" results/*/$(TLS)/ok-* || true
+	@scripts/display Valid $(TLS)
 check-xf:
-	@echo "*** Invalid certificates that passed validation:"
-	@grep "TLS-VALIDATION: Success" results/*/$(TLS)/xf-* || true
+	@scripts/display Invalid $(TLS)
 check-openssl: check-openssl-ok check-openssl-xf
 check-openssl-ok: $(RESULTS_OPENSSL_OK)
-	@echo "*** Valid certificates that failed OpenSSL validation:"
-	@grep "TLS-VALIDATION: Failed" results/openssl/$(TLS)/ok-* || true
+	@scripts/display Valid $(TLS) OpenSSL
 check-openssl-xf: $(RESULTS_OPENSSL_XF)
-	@echo "*** Invalid certificates that passed OpenSSL validation:"
-	@grep "TLS-VALIDATION: Success" results/openssl/$(TLS)/xf-* || true
+	@scripts/display Invalid $(TLS) OpenSSL
 check-boringssl: check-boringssl-ok check-boringssl-xf
 check-boringssl-ok: $(RESULTS_BORINGSSL_OK)
-	@echo "*** Valid certificates that failed BoringSSL validation:"
-	@grep "TLS-VALIDATION: Failed" results/boringssl/$(TLS)/ok-* || true
+	@scripts/display Valid $(TLS) BoringSSL
 check-boringssl-xf: $(RESULTS_BORINGSSL_XF)
-	@echo "*** Invalid certificates that passed BoringSSL validation:"
-	@grep "TLS-VALIDATION: Success" results/boringssl/$(TLS)/xf-* || true
+	@scripts/display Invalid $(TLS) BoringSSL
 check-gnutls: check-gnutls-ok check-gnutls-xf
 check-gnutls-ok: $(RESULTS_GNUTLS_OK)
-	@echo "*** Valid certificates that failed GnuTLS validation:"
-	@grep "TLS-VALIDATION: Failed" results/gnutls/$(TLS)/ok-* || true
+	@scripts/display Valid $(TLS) GnuTLS
 check-gnutls-xf: $(RESULTS_GNUTLS_XF)
-	@echo "*** Invalid certificates that passed GnuTLS validation:"
-	@grep "TLS-VALIDATION: Success" results/gnutls/$(TLS)/xf-* || true
+	@scripts/display Invalid $(TLS) GnuTLS
 check-nss: check-nss-ok check-nss-xf
 check-nss-ok: $(RESULTS_NSS_OK)
-	@echo "*** Valid certificates that failed NSS validation:"
-	@grep "TLS-VALIDATION: Failed" results/nss/$(TLS)/ok-* || true
+	@scripts/display Valid $(TLS) NSS
 check-nss-xf: $(RESULTS_NSS_XF)
-	@echo "*** Invalid certificates that passed NSS validation:"
-	@grep "TLS-VALIDATION: Success" results/nss/$(TLS)/xf-* || true
+	@scripts/display Invalid $(TLS) NSS
 
 results-openssl: $(RESULTS_OPENSSL)
 results-boringssl: $(RESULTS_BORINGSSL)
