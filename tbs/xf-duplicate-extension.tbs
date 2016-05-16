@@ -1,0 +1,201 @@
+SEQUENCE {  # TBSCertificate
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `42822a5b866fbfeb` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature
+  SEQUENCE {  # Name
+    SET {
+      SEQUENCE {
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }
+        PrintableString { "GB" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # localityName
+        OBJECT_IDENTIFIER { 2.5.4.7 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }
+        UTF8String { "Google" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationUnitName
+        OBJECT_IDENTIFIER { 2.5.4.11 }
+        UTF8String { "Eng" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }
+        UTF8String { "FakeCertificateAuthority" }
+      }
+    }
+  }  # issuer
+  SEQUENCE {  # Validity
+    UTCTime { "160217102716Z" }  # notBefore
+    UTCTime { "460517000000Z" }  # notAfter
+  }  # validity
+  SEQUENCE {  # Name
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }  # type
+        PrintableString { "US" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }  # type
+        UTF8String { "California" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # localityName
+        OBJECT_IDENTIFIER { 2.5.4.7 }  # type
+        UTF8String { "RFC5280 s4.2 'A certificate MUST NOT include more than one instance of a particular extension'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }  # type
+        UTF8String { "Duplicate extensions present" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }  # type
+        UTF8String { "*.google.com" }  # value
+      }
+    }
+  }  # subject
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # ecPublicKey
+      OBJECT_IDENTIFIER { 1.2.840.10045.2.1 }  # algorithm
+      # secp256r1
+      OBJECT_IDENTIFIER { 1.2.840.10045.3.1.7 }  # parameters
+    }  # algorithm
+    BIT_STRING { `0004c4093984f5158d1254b2029cf901e26d3547d40dd011616609351dcb121495b23fff35bd228e4dfc38502d22d6981ecaa023afa4967e32d1825f3157fb28ff37` }  # subjectPublicKey
+  }  # subjectPublicKeyInfo
+  [3] {
+    SEQUENCE {  # Extensions
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.37 }  # extnID = id-ce-extKeyUsage
+        OCTET_STRING {
+          SEQUENCE {  # ExtKeyUsageSyntax
+            # serverAuth
+            OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.3.1 }  # KeyPurposeId
+            # clientAuth
+            OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.3.2 }  # KeyPurposeId
+          }  # extnValue
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # keyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        OCTET_STRING {
+          BIT_STRING { `0780` }  # KeyUsage
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # keyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        OCTET_STRING {
+          BIT_STRING { `0780` }  # KeyUsage
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # authorityInfoAccess
+        OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.1.1 }  # extnID = id-pe-authorityInfoAccess
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityInfoAccessSyntax
+            SEQUENCE {  # AccessDescription
+              # caIssuers
+              OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.48.2 }  # accessMethod
+              [6 PRIMITIVE] { "http://pki.google.com/GIAG2.crt" }  # accessLocation
+            }
+            SEQUENCE {  # AccessDescription
+              # ocsp
+              OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.48.1 }  # accessMethod
+              [6 PRIMITIVE] { "http://clients1.google.com/ocsp" }  # accessLocation
+            }
+          }
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # authorityKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityKeyIdentifier
+            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+          }
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # authorityKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityKeyIdentifier
+            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+          }
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # certificatePolicies
+        OBJECT_IDENTIFIER { 2.5.29.32 }  # extnID = id-ce-certificatePolicies
+        OCTET_STRING {
+          SEQUENCE {  # CertificatePolicies
+            SEQUENCE {  # PolicyInformation
+              OBJECT_IDENTIFIER { 1.3.6.1.4.1.11129.2.5.1 }  # CertPolicyId = 'Google Internet Authority G2'
+            }
+            SEQUENCE {  # PolicyInformation
+              # organization-validated
+              OBJECT_IDENTIFIER { 2.23.140.1.2.2 }  # CertPolicyId
+            }
+          }  # certificatePolicies
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # cRLDistributionPoints
+        OBJECT_IDENTIFIER { 2.5.29.31 }  # extnID = id-ce-cRLDistributionPoints
+        OCTET_STRING {
+          SEQUENCE {  # CRLDistributionPoints
+            SEQUENCE {  # DistributionPoint
+              [0] {  # DistributionPointName
+                [0] {  # GeneralNames
+                  [6 PRIMITIVE] { "http://pki.google.com/GIAG2.crl" }  # uniformResourceIdentifier
+                }  # fullName
+              }  # distributionPoint
+            }
+          }
+        }  # extnValue
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
