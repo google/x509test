@@ -1,0 +1,174 @@
+SEQUENCE {  # TBSCertificate
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `023a83` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature
+  SEQUENCE {  # Name
+    SET {
+      SEQUENCE {
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }
+        PrintableString { "GB" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # localityName
+        OBJECT_IDENTIFIER { 2.5.4.7 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }
+        UTF8String { "Google" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationUnitName
+        OBJECT_IDENTIFIER { 2.5.4.11 }
+        UTF8String { "Eng" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }
+        UTF8String { "FakeCertificateAuthority" }
+      }
+    }
+  }  # issuer
+  SEQUENCE {  # Validity
+    UTCTime { "160217102716Z" }  # notBefore
+    UTCTime { "460517000000Z" }  # notAfter
+  }  # validity
+  SEQUENCE {  # Name
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }
+        PrintableString { "US" }
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }
+        PrintableString { "Google Inc" }
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }
+        PrintableString { "Google Internet Authority G2" }
+      }
+    }
+  }  # subject
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # rsaEncryption
+      OBJECT_IDENTIFIER { 1.2.840.113549.1.1.1 }  # algorithm
+      NULL {}  # parameters
+    }  # algorithm
+    BIT_STRING {
+      `00`
+      SEQUENCE {
+        INTEGER { `009c2a04775cd850913a06a382e0d85048bc893ff119701a88467ee08fc5f189ce21ee5afe610db7324489a0740b534f55a4ce826295eeeb595fc6e1058012c45e943fbc5b4838f453f724e6fb91e915c4cff4530df44afc9f54de7dbea06b6f87c0d0501f28300340da0873516c7fff3a3ca737068ebd4b1104eb7d24dee6f9fc3171fb94d560f32e4aaf42d2cbeac46a1ab2cc53dd154b8b1fc819611fcd9da83e632b8435696584c819c54622f85395bee3804a10c62aecba972011c739991004a0f0617a95258c4e5275e2b6ed08ca14fcce226ab34ecf46039797037ec0b1de7baf4533cfba3e71b7def42525c20d35899d9dfb0e1179891e37c5af8e7269` }
+        INTEGER { 65537 }
+      }
+    }  # subjectPublicKey
+  }  # subjectPublicKeyInfo
+  [3] {
+    SEQUENCE {  # Extensions
+      SEQUENCE {  # Extension
+        # authorityKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.35 }
+        OCTET_STRING {
+          SEQUENCE {
+            [0 PRIMITIVE] { `c07a98688d89fbab05640c117daa7d65b8cacc4e` }
+          }
+        }
+      }
+      SEQUENCE {  # Extension
+        # subjectKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.14 }
+        OCTET_STRING {
+          OCTET_STRING { `4add06161bbcf668b576f581b6bb621aba5a812f` }
+        }
+      }
+      SEQUENCE {  # Extension
+        # keyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }
+        BOOLEAN { `ff` }
+        OCTET_STRING {
+          BIT_STRING { `01ff` }
+        }
+      }
+      SEQUENCE {  # Extension
+        # authorityInfoAccess
+        OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.1.1 }
+        OCTET_STRING {
+          SEQUENCE {
+            SEQUENCE {
+              # ocsp
+              OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.48.1 }
+              [6 PRIMITIVE] { "http://g.symcd.com" }
+            }
+          }
+        }
+      }
+      SEQUENCE {  # Extension
+        # basicConstraints
+        OBJECT_IDENTIFIER { 2.5.29.19 }
+        BOOLEAN { `ff` }
+        OCTET_STRING {
+          SEQUENCE {
+            BOOLEAN { `ff` }
+            INTEGER { 0 }
+          }
+        }
+      }
+      SEQUENCE {  # Extension
+        # cRLDistributionPoints
+        OBJECT_IDENTIFIER { 2.5.29.31 }
+        OCTET_STRING {
+          SEQUENCE {
+            SEQUENCE {
+              [0] {
+                [0] {
+                  [6 PRIMITIVE] { "http://g.symcb.com/crls/gtglobal.crl" }
+                }
+              }
+            }
+          }
+        }
+      }
+      SEQUENCE {  # Extension
+        # certificatePolicies
+        OBJECT_IDENTIFIER { 2.5.29.32 }
+        OCTET_STRING {
+          SEQUENCE {
+            SEQUENCE {
+              OBJECT_IDENTIFIER { 1.3.6.1.4.1.11129.2.5.1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}
