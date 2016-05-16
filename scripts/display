@@ -3,38 +3,45 @@ import sys
 import re
 import glob
 
-expect = sys.argv[1]
-bld = sys.argv[2]
-tool = sys.argv[3] if len(sys.argv) > 3 else None
 
-needle = re.compile("TLS-VALIDATION: %s" % ("Failed" if expect == "Valid" else "Success"))
-prefix = "ok" if expect == "Valid" else "xf"
-subdir = tool.lower() if tool else '*'
-haystack = 'results/%s/%s/%s-*' % (subdir, bld, prefix)
-submsg = "%s " % tool if tool else ""
-
-
-fname_re = re.compile("results/(?P<subdir>\S+)/(?P<bld>\S+)/(?P<prefix>..)-(?P<case>.*).out")
-failures = {}  # casename => [subdir, subdir, ...]
-for filename in glob.glob(haystack):
-    m = fname_re.match(filename)
-    if not m:
-        raise Exception("Unexpected filename structure %s" % filename)
-    with open(filename, "r") as infile:
-        contents = infile.read()
-        if needle.search(contents):
-            subdir = m.group('subdir')
-            assert bld == m.group('bld')
-            assert prefix == m.group('prefix')
-            case = m.group('case')
-            if case not in failures:
-                failures[case] = []
-            failures[case].append(subdir)
-
-if len(failures) > 0:
+def display(expect, bld, tool):
+    needle = re.compile("TLS-VALIDATION: %s" %
+                        ("Failed" if expect == "Valid" else "Success"))
+    prefix = "ok" if expect == "Valid" else "xf"
+    subdir = tool.lower() if tool else '*'
+    haystack = 'results/%s/%s/%s-*' % (subdir, bld, prefix)
+    submsg = "%s " % tool if tool else ""
+    fname_re = re.compile("results/(?P<subdir>\S+)/"
+                          "(?P<bld>\S+)/(?P<prefix>..)-(?P<case>.*).out")
+    subdirs = set()
+    failures = {}  # casename => [subdir, subdir, ...]
+    for filename in glob.glob(haystack):
+        m = fname_re.match(filename)
+        if not m:
+            raise Exception("Unexpected filename structure %s" % filename)
+        with open(filename, "r") as infile:
+            contents = infile.read()
+            if needle.search(contents):
+                subdir = m.group('subdir')
+                subdirs.add(subdir)
+                assert bld == m.group('bld')
+                assert prefix == m.group('prefix')
+                case = m.group('case')
+                if case not in failures:
+                    failures[case] = []
+                failures[case].append(subdir)
+    if len(failures) == 0:
+        return
     if expect == "Valid":
         print "*** Valid certificates that failed %svalidation:" % submsg
     else:
         print "*** Invalid certificates that passed %svalidation:" % submsg
+    subdirs = list(sorted(subdirs))
     for case in sorted(failures.keys()):
-        print "    %-25s  %s" % ('%s:' % case, ",".join(failures[case]))
+        flist = ["  %-*s" % (len(s), s if s in failures[case] else '') for s in subdirs]
+        print "    %-25s%s" % ('%s:' % case, "".join(flist))
+
+
+if __name__ == "__main__":
+    display(sys.argv[1], sys.argv[2],
+            sys.argv[3] if len(sys.argv) > 3 else None)
