@@ -39,7 +39,7 @@ def display(expect, bld, tool):
     subdirs = list(sorted(subdirs))
     for case in sorted(failures.keys()):
         flist = ["  %-*s" % (len(s), s if s in failures[case] else '') for s in subdirs]
-        print "    %-25s%s" % ('%s:' % case, "".join(flist))
+        print "    %-30s%s" % ('%s:' % case, "".join(flist))
 
 
 if __name__ == "__main__":
