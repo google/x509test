@@ -118,7 +118,7 @@ results/gnutls/$(TLS):
 results/nss/$(TLS):
 	mkdir -p $@
 results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TLS)
-	scripts/check-openssl $(OPENSSL) verify -CAfile ca/fake-ca.cert $< > $@ 2>&1
+	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
 results/boringssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/boringssl/$(TLS)
 	scripts/check-boringssl $(BORINGSSL) verify -CAfile ca/fake-ca.cert $< > $@ 2>&1
 results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
