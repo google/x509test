@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Duplicate (but identical) extensions present" }  # value
+        UTF8String { "Duplicate (non-identical) extensions present" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
@@ -127,7 +127,7 @@ SEQUENCE {  # TBSCertificate
         # keyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         OCTET_STRING {
-          BIT_STRING { `0780` }  # KeyUsage
+          BIT_STRING { `0100` }  # KeyUsage
         }  # extnValue
       }
       SEQUENCE {  # Extension
@@ -162,7 +162,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
         OCTET_STRING {
           SEQUENCE {  # AuthorityKeyIdentifier
-            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+            [0 PRIMITIVE] { `abcdefabcdef` }  # KeyIdentifier
           }
         }  # extnValue
       }
