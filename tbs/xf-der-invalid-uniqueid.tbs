@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Invalid DER encoding (EXPLICIT not IMPLICIT) of subjectUniqueId : UniqueIdentifier" }  # value
+        UTF8String { "Invalid DER for subjectUniqueId.UniqueIdentifier" }  # value
       }
     }
     SET {  # RelativeDistinguishedName

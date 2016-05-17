@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Missing keyIdentifier Authority Key Identifier extension" }  # value
+        UTF8String { "Authority Key Identifier extension without keyId" }  # value
       }
     }
     SET {  # RelativeDistinguishedName

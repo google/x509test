@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Signature mismatch (sha384/sha256) between inner/outer"}  # value
+        UTF8String { "Signature mismatch between inner & outer"}  # value
       }
     }
     SET {  # RelativeDistinguishedName

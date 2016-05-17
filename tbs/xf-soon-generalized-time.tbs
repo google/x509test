@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Google Inc" }  # value
+        UTF8String { "GeneralizedTime used for date before 2050" }  # value
       }
     }
     SET {  # RelativeDistinguishedName

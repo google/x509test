@@ -75,14 +75,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # localityName
         OBJECT_IDENTIFIER { 2.5.4.7 }  # type
-        UTF8String { "Mountain View" }  # value
+        UTF8String { "RFC5280 s4.1.2.2 'The serial number MUST be a positive integer'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Google Inc" }  # value
+        UTF8String { "Negative serial number" }  # value
       }
     }
     SET {  # RelativeDistinguishedName

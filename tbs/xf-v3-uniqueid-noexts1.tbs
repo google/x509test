@@ -82,7 +82,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Version 3 with UniqueIdentifier but no extensions" }  # value
+        UTF8String { "V3 cert with subject UniqueId but no extensions" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
