@@ -9,7 +9,11 @@ _subject_re = re.compile('^subject= ' +
                          '(/ST=(?P<ST>[^/]+))?' +
                          '(/L=(?P<L>[^/]+))?' +
                          '(/O=(?P<O>[^/]+))?' +
-                         '(/CN=(?P<CN>[^/]+))?\s*$')
+                         '(/CN=(?P<CN>[^/]+))?' +
+                         '(/SN=(?P<SN>[^/]+))?' +
+                         '(/dnQualifier=(?P<dnQualifier>[^/]+))?' +
+                         '(/GN=(?P<GN>[^/]+))?' +
+                         '\s*$')
 'subject= /C=US/ST=California/L=Mountain View/O=Google Inc/CN=*.google.com'
 
 def display(expect, bld, tool):
@@ -41,16 +45,16 @@ def display(expect, bld, tool):
     if len(failures) == 0:
         return
 
-    # Extract info about the test case from the subject/Organization
+    # Extract info about the test case from the subject/givenName
     case_text = {}
     for case in sorted(failures.keys()):
         certname = "certs/%s-%s.der" % (prefix, case)
         subject = os.popen('openssl x509 -in %s -inform der -subject -noout' % certname).read()
         m = _subject_re.match(subject)
-        if m:
-            case_text[case] = m.group('O')
+        if m and m.group('GN'):
+            case_text[case] = m.group('GN').rstrip()
         else:
-            case_text[case] = subject
+            case_text[case] = subject.rstrip()
 
     if expect == "Valid":
         print "*** Valid certificates that failed %svalidation:" % submsg

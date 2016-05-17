@@ -64,18 +64,18 @@ SEQUENCE {  # TBSCertificate
         PrintableString { "US" }
       }
     }
-    SET {
-      SEQUENCE {
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
         # localityName
-        OBJECT_IDENTIFIER { 2.5.4.7 }
-        PrintableString { "RFC5280 s4.2.1.2 'this extension MUST appear in all conforming CA certificates'" }
+        OBJECT_IDENTIFIER { 2.5.4.7 }  # type
+        UTF8String { "Mountain View" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
-        OBJECT_IDENTIFIER { 2.5.4.10 }
-        PrintableString { "CA cert without Subject Key Identifier extension" }
+        OBJECT_IDENTIFIER { 2.5.4.10 }  # type
+        UTF8String { "Google Inc" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
@@ -83,6 +83,20 @@ SEQUENCE {  # TBSCertificate
         # commonName
         OBJECT_IDENTIFIER { 2.5.4.3 }
         PrintableString { "Google Internet Authority G2" }
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.2 'this extension MUST appear in all conforming CA certificates'" }
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        PrintableString { "CA cert without Subject Key Identifier extension" }
       }
     }
   }  # subject

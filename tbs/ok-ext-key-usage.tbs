@@ -75,14 +75,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # localityName
         OBJECT_IDENTIFIER { 2.5.4.7 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: key usage (Section 4.2.1.3)...'" }  # value
+        UTF8String { "Mountain View" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Include Key Usage extension" }  # value
+        UTF8String { "Google Inc" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
@@ -90,6 +90,20 @@ SEQUENCE {  # TBSCertificate
         # commonName
         OBJECT_IDENTIFIER { 2.5.4.3 }  # type
         UTF8String { "*.google.com" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: key usage (Section 4.2.1.3)...'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Include Key Usage extension" }  # value
       }
     }
   }  # subject
