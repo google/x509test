@@ -5,6 +5,10 @@ shift
 OUTPUT=`$OPENSSL $*`
 RESULT=$?
 echo "$OUTPUT"
+SEENERR=`echo "$OUTPUT" | grep error`
+if [ "$SEENERR" != "" ]; then
+    RESULT=123
+fi
 if [ $RESULT -ne 0 ]; then
     echo "TLS-VALIDATION: Failed"
 else
