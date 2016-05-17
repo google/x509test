@@ -7,6 +7,8 @@ import sys
 import os
 import re
 import getopt
+import tempfile
+from datetime import datetime, timedelta
 from point_six import prnt
 
 _OPENSSL_OPTS = {
@@ -32,6 +34,9 @@ def _oid_for_opt(opt):
 
 
 _OID_RE = re.compile(r'^\s*OBJECT_IDENTIFIER\s+\{\s+(?P<oid>[0-9.]+)\s+\}\s*(#.*)?$')
+_START_RE = re.compile(r'^(?P<indent>\s+)UTCTime { "\d+Z" }  # notBefore\s*$')
+_END_RE = re.compile(r'^(?P<indent>\s+)UTCTime { "\d+Z" }  # notAfter\s*$')
+
 _OID_BYTES = (
     # Named curves.
     ([0x2b, 0x81, 0x04, 0x00, 0x21], "secp224r1"),
@@ -202,26 +207,52 @@ def _main(argv):
     dgst_opt = "-sha256"
     with open(tbscert, "r") as infile:
         tbsdata = infile.read()
+
+    outfd, outname = tempfile.mkstemp(suffix='.tbs')
+    outfile = os.fdopen(outfd, 'w')
+    lines = []
     for line in tbsdata.split('\n'):
         m = _OID_RE.match(line)
         if m:
             oid_raw = m.group('oid')
             oid_name = _OID_NAMES.get(oid_raw, None)
             opt = _OPENSSL_OPTS.get(oid_name, None)
-            if verbose:
-                prnt('Found algorithm %s (%s) => option %s' %
-                     (oid_raw, oid_name, opt), file=sys.stderr)
             if opt is not None:
+                if verbose:
+                    prnt('Found algorithm %s (%s) => option %s' %
+                         (oid_raw, oid_name, opt), file=sys.stderr)
                 dgst_opt = opt
-            break
-    dgst_cmd = 'ascii2der -i %s | openssl dgst %s -sign %s' % (tbscert, dgst_opt, privkey)
+        utcnow = datetime.utcnow()
+        start = utcnow - timedelta(60)  # 60d ago
+        end = utcnow + timedelta(365*3)  # ~3 years ahead
+        m1 = _START_RE.match(line)
+        m2 = _END_RE.match(line)
+        if m1:
+            if verbose:
+                prnt("Seting notBefore to %s" % start, file=sys.stderr)
+            lines.append('%sUTCTime { "%sZ" }  # notBefore' %
+                         (m1.group('indent'), start.strftime("%y%m%d%H%M%S")))
+        elif m2:
+            if verbose:
+                prnt("Seting notBefore to %s" % end, file=sys.stderr)
+            lines.append('%sUTCTime { "%sZ" }  # notAfter' %
+                         (m2.group('indent'), end.strftime("%y%m%d%H%M%S")))
+        else:
+            lines.append(line)
+
+    # Send modified TBS to DER for signature.
+    for line in lines:
+        prnt(line, file=outfile)
+    outfile.close()
+    dgst_cmd = 'ascii2der -i %s | openssl dgst %s -sign %s' % (outname, dgst_opt, privkey)
     if verbose:
         prnt('Invoke: %s' % dgst_cmd, file=sys.stderr)
     sig_bytes = os.popen(dgst_cmd).read()
+    os.unlink(outname)
     sig_hex = ''.join(['%02x' % ord(b) for b in sig_bytes])
     # Now output ASCII full certificate
     prnt('SEQUENCE {')
-    for line in tbsdata.split('\n'):
+    for line in lines:
         prnt('  %s' % line)
     prnt('  SEQUENCE {')
     dgst_oid = _oid_for_opt(dgst_opt)

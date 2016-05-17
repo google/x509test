@@ -53,8 +53,8 @@ SEQUENCE {  # TBSCertificate
     }
   }  # issuer
   SEQUENCE {  # Validity
-    UTCTime { "510217102716Z" }  # notBefore
-    UTCTime { "460517000000Z" }  # notAfter
+    UTCTime { "510217102716Z" }  # notBefore LEAVE-AS-IS
+    UTCTime { "460517000000Z" }  # notAfter  LEAVE-AS-IS
   }  # validity
   SEQUENCE {  # Name
     SET {  # RelativeDistinguishedName
