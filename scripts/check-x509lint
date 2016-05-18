@@ -1,0 +1,17 @@
+#!/bin/sh
+# Wrapper for openssl, to ensure a validation result is recorded
+X509LINT=$1
+shift
+OUTPUT=`$X509LINT $*`
+RESULT=$?
+echo "$OUTPUT"
+SEENERR=`echo "$OUTPUT" | grep E:`
+if [ "$SEENERR" != "" ]; then
+    RESULT=123
+fi
+if [ $RESULT -ne 0 ]; then
+    echo "TLS-VALIDATION: Failed"
+else
+    echo "TLS-VALIDATION: Success"
+fi
+

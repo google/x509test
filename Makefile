@@ -30,6 +30,8 @@ else ifeq ($(TLS),tip)
 else
   $(error Unknown TLS tool selection $(TLS))
 endif
+# Tip-code only tools
+X509LINT = third_party/tip/instroot/bin/x509lint
 
 TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs))
 
@@ -37,18 +39,21 @@ RESULTS_OPENSSL_OK = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TB
 RESULTS_BORINGSSL_OK = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_OK = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_OK = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_X509LINT_OK = $(addprefix results/x509lint/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL_XF = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_BORINGSSL_XF = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_XF = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_XF = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_X509LINT_XF = $(addprefix results/x509lint/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
 # @@@ RESULTS_BORINGSSL = $(RESULTS_BORINGSSL_OK) $(RESULTS_BORINGSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
 RESULTS_NSS = $(RESULTS_NSS_OK) $(RESULTS_NSS_XF)
+RESULTS_X509LINT = $(RESULTS_X509LINT_OK) $(RESULTS_X509LINT_XF)
 
-RESULTS = $(RESULTS_OPENSSL) $(RESULTS_BORINGSSL) $(RESULTS_GNUTLS) $(RESULTS_NSS)
+RESULTS = $(RESULTS_OPENSSL) $(RESULTS_BORINGSSL) $(RESULTS_GNUTLS) $(RESULTS_NSS) $(RESULTS_X509LINT)
 
 all: check
 
@@ -77,18 +82,24 @@ check-nss-ok: $(RESULTS_NSS_OK)
 	@scripts/display Valid $(TLS) NSS
 check-nss-xf: $(RESULTS_NSS_XF)
 	@scripts/display Invalid $(TLS) NSS
+check-x509lint: check-x509lint-ok check-x509lint-xf
+check-x509lint-ok: $(RESULTS_X509LINT_OK)
+	@scripts/display Valid tip x509lint
+check-x509lint-xf: $(RESULTS_X509LINT_XF)
+	@scripts/display Invalid tip x509lint
 
 results-openssl: $(RESULTS_OPENSSL)
 results-boringssl: $(RESULTS_BORINGSSL)
 results-gnutls: $(RESULTS_GNUTLS)
 results-nss: $(RESULTS_NSS)
+results-x509lint: $(RESULTS_X509LINT)
 
 # deps target prepares TLS tools; it depends on the TLS env var.
 deps: $(DEPS)
 pkg-install:
 	sudo apt-get install $(PREREQS)
 show-tls:
-	@echo Using: $(OPENSSL) $(BORINGSSL) $(CERTUTIL) $(CERTTOOL)
+	@echo Using: $(OPENSSL) $(BORINGSSL) $(CERTUTIL) $(CERTTOOL) $(X509LINT)
 
 ###########################################
 # TLS tool targets.
@@ -117,6 +128,8 @@ results/gnutls/$(TLS):
 	mkdir -p $@
 results/nss/$(TLS):
 	mkdir -p $@
+results/x509lint/$(TLS):
+	mkdir -p $@
 results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TLS)
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
 results/boringssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/boringssl/$(TLS)
@@ -125,6 +138,8 @@ results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate fake-ca.cert --infile $< >$@ 2>&1
 results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
+results/x509lint/$(TLS)/%.out: certs/%.pem | results/x509lint/$(TLS)
+	scripts/check-x509lint $(X509LINT) $< > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
