@@ -139,7 +139,7 @@ results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/
 results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 results/x509lint/$(TLS)/%.out: certs/%.pem | results/x509lint/$(TLS)
-	scripts/check-x509lint $(X509LINT) $< > $@ 2>&1
+	scripts/check-x509lint $(X509LINT) -c $< > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout

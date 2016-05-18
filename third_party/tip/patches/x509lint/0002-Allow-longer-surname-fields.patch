@@ -1,7 +1,7 @@
 From 4837ad0a22a7525bde788c2358ce9fe86d54c755 Mon Sep 17 00:00:00 2001
 From: David Drysdale <drysdale@google.com>
 Date: Tue, 17 May 2016 17:52:37 +0100
-Subject: [PATCH 2/3] Allow longer surname fields.
+Subject: [PATCH] Allow longer surname fields.
 
 I think the ub-surname-length limit of 40 only applies to the
 surname field in an X.400 address (CHOICE [3] in GeneralName),

@@ -1,7 +1,7 @@
 From 7a95e89dc7238f20876aeb1ea6b32f417969699c Mon Sep 17 00:00:00 2001
 From: David Drysdale <drysdale@google.com>
 Date: Tue, 17 May 2016 18:06:53 +0100
-Subject: [PATCH 3/3] Separate out CAB checks
+Subject: [PATCH] Separate out CAB checks
 
 Add a boolean to control whether CAB checks are made, or
 just base RFC checks.
