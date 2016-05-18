@@ -92,6 +92,20 @@ SEQUENCE {  # TBSCertificate
         UTF8String { "*.google.com" }  # value
       }
     }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.1.2.2 'The serial number MUST be a positive integer'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Zero serial number" }  # value
+      }
+    }
   }  # subject
   SEQUENCE {  # SubjectPublicKeyInfo
     SEQUENCE {  # AlgorithmIdentifier
