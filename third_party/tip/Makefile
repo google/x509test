@@ -96,5 +96,5 @@ bld-x509lint: x509lint/x509lint
 x509lint/x509lint: cfg-x509lint
 	cd x509lint && $(MAKE)
 inst-x509lint: instroot/bin/x509lint
-instroot/bin/x509lint: x509lint/x509lint
+instroot/bin/x509lint: x509lint/x509lint | instroot/bin
 	cp $< $@

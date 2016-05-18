@@ -5,6 +5,8 @@ PREREQS=autopoint autogen cmake
 INSTROOT=$(CURDIR)/instroot
 instroot:
 	mkdir -p $@
+instroot/bin: | instroot
+	mkdir -p $@
 # Where to install configuration files etc.
 CFGROOT=$(INSTROOT)/cfg
 instroot/cfg: | instroot
