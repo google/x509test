@@ -4,6 +4,7 @@ libressl
 boringssl
 gnutls
 nss
+x509lint
 deps
 downloads
 # Ignore generated binaries & config
