@@ -1,0 +1,87 @@
+From 2e403234beee5fc8c89d53a285b1b91f9b8f643a Mon Sep 17 00:00:00 2001
+From: David Drysdale <drysdale@google.com>
+Date: Wed, 18 May 2016 16:44:00 +0100
+Subject: [PATCH] Fix spelling extention -> extension throughout
+
+---
+ checks.c   | 6 +++---
+ checks.h   | 2 +-
+ messages.c | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/checks.c b/checks.c
+index 301a7d1..874bd05 100644
+--- a/checks.c
++++ b/checks.c
+@@ -1221,7 +1221,7 @@ static int obj_cmp(const ASN1_OBJECT * const *a, const ASN1_OBJECT * const *b)
+ 	return OBJ_cmp(*a, *b);
+ }
+ 
+-static void CheckDuplicateExtentions(X509 *x509)
++static void CheckDuplicateExtensions(X509 *x509)
+ {
+ 	STACK_OF(ASN1_OBJECT) *stack = sk_ASN1_OBJECT_new(obj_cmp);
+ 
+@@ -1235,7 +1235,7 @@ static void CheckDuplicateExtentions(X509 *x509)
+ 		}
+ 		if (sk_ASN1_OBJECT_find(stack, ext->object) >= 0)
+ 		{
+-			SetError(ERR_DUPLICATE_EXTENTION);
++			SetError(ERR_DUPLICATE_EXTENSION);
+ 		}
+ 		else
+ 		{
+@@ -1504,7 +1504,7 @@ void check(unsigned char *cert_buffer, size_t cert_len, CertFormat format, CertT
+ 	}
+ 	CheckDN(subject);
+ 
+-	CheckDuplicateExtentions(x509);
++	CheckDuplicateExtensions(x509);
+ 
+ 	/* Prohibited in CAB base 7.1.4.2.2c */
+ 	if (cab_checks && !IsNameObjPresent(subject, obj_organizationName)
+diff --git a/checks.h b/checks.h
+index 28dc8a2..1b4bcf3 100644
+--- a/checks.h
++++ b/checks.h
+@@ -28,7 +28,7 @@ typedef enum { PEM, DER } CertFormat;
+ #define ERR_LONGER_60_MONTHS                  17
+ #define ERR_COUNTRY_SIZE                      18
+ #define ERR_INVALID_TIME_FORMAT               19
+-#define ERR_DUPLICATE_EXTENTION               20
++#define ERR_DUPLICATE_EXTENSION               20
+ #define ERR_INVALID_CRL_DIST_POINT            21
+ #define ERR_INVALID_DISPLAY_TEXT_TYPE         22
+ #define ERR_INVALID_DISPLAY_TEXT_LENGTH       23
+diff --git a/messages.c b/messages.c
+index db45929..009798d 100644
+--- a/messages.c
++++ b/messages.c
+@@ -46,7 +46,7 @@ static const char *error_strings[] =
+ 	"E: The certificate is valid for longer than 60 months\n", /* ERR_LONGER_60_MONTHS */
+ 	"E: countryName not 2 characters long\n", /* ERR_COUNTRY_SIZE */
+ 	"E: Invalid time format\n", /* ERR_INVALID_TIME_FORMAT */
+-	"E: Duplicate extention\n", /* ERR_DUPLICATE_EXTENTION */
++	"E: Duplicate extension\n", /* ERR_DUPLICATE_EXTENSION */
+ 	"E: Invalid CRL distribution point\n", /* ERR_INVALID_CRL_DIST_POINT */
+ 	"E: Invalid display text type\n", /* ERR_INVALID_DISPLAY_TEXT_TYPE */
+ 	"E: Invalid display text length\n", /* ERR_INVALID_DISPLAY_TEXT_LENGTH */
+@@ -78,13 +78,13 @@ static const char *error_strings[] =
+ 	"E: streetAddress too long\n", /* ERR_STREET_ADDRESS_SIZE */
+ 	"E: authorityInformationAccess is marked critical\n", /* ERR_AIA_CRITICAL */
+ 	"E: No OCSP over HTTP\n",  /* ERR_NO_OCSP_HTTP */
+-	"E: no authorityInformationAccess extention\n", /* ERR_NO_AIA */
++	"E: no authorityInformationAccess extension\n", /* ERR_NO_AIA */
+ 	"E: Invalid type in SAN entry\n", /* ERR_SAN_TYPE */
+ 	"E: Invalid type in GeneralName\n", /* ERR_GEN_NAME_TYPE */
+ 	"E: EV certificate valid longer than 27 months\n", /* ERR_EV_LONGER_27_MONTHS */
+ 	"E: subjectAlterativeName without name\n", /* ERR_SAN_WITHOUT_NAME */
+ 	"E: Invalid length of IP address\n", /* ERR_IP_FAMILY */
+-	"E: commonName not in subjectAltName extention\n", /* ERR_CN_NOT_IN_SAN */
++	"E: commonName not in subjectAltName extension\n", /* ERR_CN_NOT_IN_SAN */
+ 	"E: Invalid length of businessCategory\n", /* ERR_BUSINESS_CATEGORY_SIZE */
+ 	"E: Invalid length of dnQualifier\n", /* ERR_DN_QUALIFIER_SIZE */
+ 	"E: URL contains a null character\n", /* ERR_URL_WITH_NUL */
+-- 
+1.9.1
+
