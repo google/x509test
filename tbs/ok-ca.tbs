@@ -78,6 +78,20 @@ SEQUENCE {  # TBSCertificate
         PrintableString { "Google Internet Authority G2" }
       }
     }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.1.2.6 'the subject is a CA (e.g., the basic constraints extension, as discussed in Section 4.2.1.9, is present and the value of cA is TRUE)'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "CA certificate" }  # value
+      }
+    }
   }  # subject
   SEQUENCE {  # SubjectPublicKeyInfo
     SEQUENCE {  # AlgorithmIdentifier

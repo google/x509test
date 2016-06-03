@@ -92,6 +92,20 @@ SEQUENCE {  # TBSCertificate
         UTF8String { "*.google.com" }  # value
       }
     }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.1.2.1 'When extensions are used, as expected in this profile, version MUST be 3'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Version 3 certificate" }  # value
+      }
+    }
   }  # subject
   SEQUENCE {  # SubjectPublicKeyInfo
     SEQUENCE {  # AlgorithmIdentifier

@@ -92,6 +92,20 @@ SEQUENCE {  # TBSCertificate
         UTF8String { "*.google.com" }  # value
       }
     }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.1.2.5 'certificate validity dates in 2050 or later MUST be encoded as GeneralizedTime. Conforming applications MUST be able to process validity dates that are encoded in either UTCTime or GeneralizedTime'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Include distant expiry time" }  # value
+      }
+    }
   }  # subject
   SEQUENCE {  # SubjectPublicKeyInfo
     SEQUENCE {  # AlgorithmIdentifier
