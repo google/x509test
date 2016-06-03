@@ -96,14 +96,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile SHOULD recognize the ... policy mappings (Section 4.2.1.5)' extension" }  # value
+        UTF8String { "RFC5280 s4.2.1.5 ' Conforming CAs SHOULD mark this extension as critical'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Policy Mapping extension" }  # value
+        UTF8String { "Policy Mapping extension marked non-critical" }  # value
       }
     }
   }  # subject
@@ -125,11 +125,34 @@ SEQUENCE {  # TBSCertificate
           SEQUENCE {
             SEQUENCE {
               # anyPolicy
-              OBJECT_IDENTIFIER { 2.5.29.32.0 }  # issuerDomainPolicy
+              OBJECT_IDENTIFIER { 2.23.140.1.2.2 }  # issuerDomainPolicy
               # domainValidated
               OBJECT_IDENTIFIER { 2.23.140.1.2.1  }  # subjectDomainPolicy
             }
           }
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # certificatePolicies
+        OBJECT_IDENTIFIER { 2.5.29.32 }  # extnID = id-ce-certificatePolicies
+        OCTET_STRING {
+          SEQUENCE {  # CertificatePolicies
+            SEQUENCE {  # PolicyInformation
+              # organization-validated
+              OBJECT_IDENTIFIER { 2.23.140.1.2.2 }  # CertPolicyId
+            }
+          }  # certificatePolicies
+        }  # extnValue
+      }
+      SEQUENCE {  # Extension
+        # basicConstraints
+        OBJECT_IDENTIFIER { 2.5.29.19 }
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {
+            BOOLEAN { `ff` }  # cA
+            INTEGER { 0 }  # pathLenConstraint
+          }  # extnValue
         }  # value
       }
     }  # extensions

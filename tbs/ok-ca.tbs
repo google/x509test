@@ -135,13 +135,13 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # Extension
         # basicConstraints
         OBJECT_IDENTIFIER { 2.5.29.19 }
-        BOOLEAN { `ff` }
+        BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {
-            BOOLEAN { `ff` }
-            INTEGER { 0 }
-          }
-        }
+            BOOLEAN { `ff` }  # cA
+            INTEGER { 0 }  # pathLenConstraint
+          }  # extnValue
+        }  # value
       }
       SEQUENCE {  # Extension
         # cRLDistributionPoints
