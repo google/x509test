@@ -230,15 +230,6 @@ SEQUENCE {  # TBSCertificate
         }  # extnValue
       }
       SEQUENCE {  # Extension
-        # authorityKeyIdentifier
-        OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
-        OCTET_STRING {
-          SEQUENCE {  # AuthorityKeyIdentifier
-            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
-          }
-        }  # extnValue
-      }
-      SEQUENCE {  # Extension
         # certificatePolicies
         OBJECT_IDENTIFIER { 2.5.29.32 }  # extnID = id-ce-certificatePolicies
         OCTET_STRING {

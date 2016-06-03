@@ -110,15 +110,6 @@ SEQUENCE {  # TBSCertificate
   [3] {
     SEQUENCE {  # Extensions
       SEQUENCE {  # Extension
-        # authorityKeyIdentifier
-        OBJECT_IDENTIFIER { 2.5.29.35 }
-        OCTET_STRING {
-          SEQUENCE {
-            [0 PRIMITIVE] { `c07a98688d89fbab05640c117daa7d65b8cacc4e` }
-          }
-        }
-      }
-      SEQUENCE {  # Extension
         # subjectKeyIdentifier
         OBJECT_IDENTIFIER { 2.5.29.14 }
         OCTET_STRING {
