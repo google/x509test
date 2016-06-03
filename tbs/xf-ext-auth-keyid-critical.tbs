@@ -124,7 +124,7 @@ SEQUENCE {  # TBSCertificate
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {  # AuthorityKeyIdentifier
-            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+            [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
           }
         }  # extnValue
       }

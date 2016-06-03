@@ -137,7 +137,7 @@ results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TL
 results/boringssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/boringssl/$(TLS)
 	scripts/check-boringssl $(BORINGSSL) verify -CAfile ca/fake-ca.cert $< > $@ 2>&1
 results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
-	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate fake-ca.cert --infile $< >$@ 2>&1
+	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
 results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 results/x509lint/$(TLS)/%.out: certs/%.pem | results/x509lint/$(TLS)
@@ -168,10 +168,8 @@ ca/fake-ca.public.pem: ca/fake-ca.private.pem
 	$(OPENSSL) rsa -pubout -in $< -out $@
 # Generate a self-signed certificate via a CSR.
 SUBJ = /C=GB/ST=London/L=London/O=Google/OU=Eng/CN=FakeCertificateAuthority
-ca/fake-ca.csr: ca/fake-ca.private.pem
-	$(OPENSSL) req -new  -days 365 -subj $(SUBJ) -inform pem -key $< -out $@
-ca/fake-ca.cert: ca/fake-ca.csr ca/fake-ca.private.pem
-	$(OPENSSL) x509 -req -days 365 -in ca/fake-ca.csr -signkey ca/fake-ca.private.pem -out $@
+ca/fake-ca.cert: ca/fake-ca.private.pem openssl.cnf
+	$(OPENSSL) req -new -x509 -config openssl.cnf -days 365 -extensions v3_ca -subj $(SUBJ) -inform pem -key $< -out $@
 ca/fake-ca.der: ca/fake-ca.cert
 	$(OPENSSL) x509 -in $< -outform der -out $@
 ca/fake-ca.ascii: ca/fake-ca.der
