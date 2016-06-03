@@ -36,31 +36,33 @@ X509LINT = third_party/tip/instroot/bin/x509lint
 TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs))
 
 RESULTS_OPENSSL_OK = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_BORINGSSL_OK = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+# @@@ RESULTS_BORINGSSL_OK = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_OK = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_OK = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_X509LINT_OK = $(addprefix results/x509lint/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL_XF = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_BORINGSSL_XF = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+# @@@ RESULTS_BORINGSSL_XF = $(addprefix results/boringssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_XF = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_XF = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_X509LINT_XF = $(addprefix results/x509lint/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
-# @@@ RESULTS_BORINGSSL = $(RESULTS_BORINGSSL_OK) $(RESULTS_BORINGSSL_XF)
+RESULTS_BORINGSSL = $(RESULTS_BORINGSSL_OK) $(RESULTS_BORINGSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
 RESULTS_NSS = $(RESULTS_NSS_OK) $(RESULTS_NSS_XF)
 RESULTS_X509LINT = $(RESULTS_X509LINT_OK) $(RESULTS_X509LINT_XF)
 
+RESULTS_OK = $(RESULTS_OPENSSL_OK) $(RESULTS_BORINGSSL_OK) $(RESULTS_GNUTLS_OK) $(RESULTS_NSS_OK) $(RESULTS_X509LINT_OK)
+RESULTS_XF = $(RESULTS_OPENSSL_XF) $(RESULTS_BORINGSSL_XF) $(RESULTS_GNUTLS_XF) $(RESULTS_NSS_XF) $(RESULTS_X509LINT_XF)
 RESULTS = $(RESULTS_OPENSSL) $(RESULTS_BORINGSSL) $(RESULTS_GNUTLS) $(RESULTS_NSS) $(RESULTS_X509LINT)
 
 all: check
 
 check: $(RESULTS) check-ok check-xf
-check-ok:
+check-ok: $(RESULTS_OK)
 	@scripts/display Valid $(TLS)
-check-xf:
+check-xf: $(RESULTS_XF)
 	@scripts/display Invalid $(TLS)
 check-openssl: check-openssl-ok check-openssl-xf
 check-openssl-ok: $(RESULTS_OPENSSL_OK)
