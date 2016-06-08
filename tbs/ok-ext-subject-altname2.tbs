@@ -96,14 +96,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: ...subject alternative name (Section 4.2.1.6)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.6 'options include an Internet electronic mail address, a DNS name, an IP address, and a Uniform Resource Identifier (URI).  Other options exist, including completely local definitions.'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Subject Alternative Name extension" }  # value
+        UTF8String { "Subject Alternative Name various forms" }  # value
       }
     }
   }  # subject
@@ -123,57 +123,61 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
         OCTET_STRING {
           SEQUENCE {  # GeneralNames
-            [2 PRIMITIVE] { "*.google.com" }  # dNSName
-            [2 PRIMITIVE] { "*.android.com" }  # dNSName
-            [2 PRIMITIVE] { "*.appengine.google.com" }  # dNSName
-            [2 PRIMITIVE] { "*.cloud.google.com" }  # dNSName
-            [2 PRIMITIVE] { "*.google-analytics.com" }  # dNSName
-            [2 PRIMITIVE] { "*.google.ca" }  # dNSName
-            [2 PRIMITIVE] { "*.google.cl" }  # dNSName
-            [2 PRIMITIVE] { "*.google.co.in" }  # dNSName
-            [2 PRIMITIVE] { "*.google.co.jp" }  # dNSName
-            [2 PRIMITIVE] { "*.google.co.uk" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.ar" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.au" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.br" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.co" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.mx" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.tr" }  # dNSName
-            [2 PRIMITIVE] { "*.google.com.vn" }  # dNSName
-            [2 PRIMITIVE] { "*.google.de" }  # dNSName
-            [2 PRIMITIVE] { "*.google.es" }  # dNSName
-            [2 PRIMITIVE] { "*.google.fr" }  # dNSName
-            [2 PRIMITIVE] { "*.google.hu" }  # dNSName
-            [2 PRIMITIVE] { "*.google.it" }  # dNSName
-            [2 PRIMITIVE] { "*.google.nl" }  # dNSName
-            [2 PRIMITIVE] { "*.google.pl" }  # dNSName
-            [2 PRIMITIVE] { "*.google.pt" }  # dNSName
-            [2 PRIMITIVE] { "*.googleadapis.com" }  # dNSName
-            [2 PRIMITIVE] { "*.googleapis.cn" }  # dNSName
-            [2 PRIMITIVE] { "*.googlecommerce.com" }  # dNSName
-            [2 PRIMITIVE] { "*.googlevideo.com" }  # dNSName
-            [2 PRIMITIVE] { "*.gstatic.cn" }  # dNSName
-            [2 PRIMITIVE] { "*.gstatic.com" }  # dNSName
-            [2 PRIMITIVE] { "*.gvt1.com" }  # dNSName
-            [2 PRIMITIVE] { "*.gvt2.com" }  # dNSName
-            [2 PRIMITIVE] { "*.metric.gstatic.com" }  # dNSName
-            [2 PRIMITIVE] { "*.urchin.com" }  # dNSName
-            [2 PRIMITIVE] { "*.url.google.com" }  # dNSName
-            [2 PRIMITIVE] { "*.youtube-nocookie.com" }  # dNSName
-            [2 PRIMITIVE] { "*.youtube.com" }  # dNSName
-            [2 PRIMITIVE] { "*.youtubeeducation.com" }  # dNSName
-            [2 PRIMITIVE] { "*.ytimg.com" }  # dNSName
-            [2 PRIMITIVE] { "android.clients.google.com" }  # dNSName
-            [2 PRIMITIVE] { "android.com" }  # dNSName
-            [2 PRIMITIVE] { "g.co" }  # dNSName
-            [2 PRIMITIVE] { "goo.gl" }  # dNSName
-            [2 PRIMITIVE] { "google-analytics.com" }  # dNSName
-            [2 PRIMITIVE] { "google.com" }  # dNSName
-            [2 PRIMITIVE] { "googlecommerce.com" }  # dNSName
-            [2 PRIMITIVE] { "urchin.com" }  # dNSName
-            [2 PRIMITIVE] { "youtu.be" }  # dNSName
-            [2 PRIMITIVE] { "youtube.com" }  # dNSName
-            [2 PRIMITIVE] { "youtubeeducation.com" }  # dNSName
+            [0] {  # OtherName
+              OBJECT_IDENTIFIER { 1.2.3.4 }
+              [0] {
+                UTF8String { "some other identifier" }
+              }
+            }  # otherName
+            [1 PRIMITIVE] { "someone@example.com" }  # IA5String rfc822Name
+            [2 PRIMITIVE] { "*.google.com" }  # IA5String dNSName
+
+            [4] {
+              SEQUENCE {  # Name
+                SET {  # RelativeDistinguishedName
+                  SEQUENCE {  # AttributeTypeAndValue
+                    # countryName
+                    OBJECT_IDENTIFIER { 2.5.4.6 }  # type
+                    PrintableString { "US" }  # value
+                  }
+                }
+                SET {  # RelativeDistinguishedName
+                  SEQUENCE {  # AttributeTypeAndValue
+                    # localityName
+                    OBJECT_IDENTIFIER { 2.5.4.7 }  # type
+                    UTF8String { "Mountain View" }  # value
+                  }
+                }
+                SET {  # RelativeDistinguishedName
+                  SEQUENCE {  # AttributeTypeAndValue
+                    # organizationName
+                    OBJECT_IDENTIFIER { 2.5.4.10 }  # type
+                    UTF8String { "Google Inc" }  # value
+                  }
+                }
+              }  # directoryName
+            }
+
+            [6 PRIMITIVE] { "http://example.com" }  # IA5String uniformResourceIdentifier
+            [7 PRIMITIVE] { `7f000001`}  # OCTET STRING iPAddress
+            [8 PRIMITIVE] { 2.5.29.17.1 }  # OBJECT IDENTIFIER registeredID
+
+#           [3 PRIMITIVE] {
+#             SEQUENCE {  # ORAddress
+#               SEQUENCE {  # BuiltInStandardAttributes
+#               # CountryName country-name
+#               # AdministrationDomainName administration-domain-name
+#               }  # built-in-standard-attributes
+#             }  # x400Address
+#           }
+
+#           [5] {  # EDIPartyName
+#             SEQUENCE {
+#               [0] { UTF8String { "assigner" } } # nameAssigner
+#               [1] { UTF8String { "party" } } # partyName
+#             }
+#           }  # ediPartyName
+
           }  # extnValue
         }  # value
       }
