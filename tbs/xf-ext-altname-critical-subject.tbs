@@ -9,10 +9,7 @@ SEQUENCE {  # TBSCertificate
     NULL {}  # parameters
   }  # signature
   #include <issuer.ascii>
-  SEQUENCE {  # Validity
-    UTCTime { "160217102716Z" }  # notBefore
-    UTCTime { "460517000000Z" }  # notAfter
-  }  # validity
+  #include <validity.ascii>
   SEQUENCE {  # Name
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue

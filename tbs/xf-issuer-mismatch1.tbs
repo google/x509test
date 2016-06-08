@@ -52,10 +52,7 @@ SEQUENCE {  # TBSCertificate
       }
     }
   }  # issuer
-  SEQUENCE {  # Validity
-    UTCTime { "160217102716Z" }  # notBefore
-    UTCTime { "460517000000Z" }  # notAfter
-  }  # validity
+  #include <validity.ascii>
   SEQUENCE {  # Name
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
