@@ -5,6 +5,7 @@ Usage: tbs2cert tbscert.ascii privkey.pem
 '''
 import sys
 import os
+import os.path
 import re
 import getopt
 import tempfile
@@ -14,7 +15,7 @@ from point_six import prnt
 _OPENSSL_OPTS = {
     "sha256WithRSAEncryption": "-sha256",
 }
-
+_INCLUDE_RE = re.compile(r'\s*#include\s+<(?P<filename>[^>]+)>\s*')
 
 def _name_for_opt(opt):
     for n, o in _OPENSSL_OPTS.items():
@@ -175,11 +176,24 @@ for (data, name) in _OID_BYTES:
     oidstr = '.'.join([str(v) for v in oid])
     _OID_NAMES[oidstr] = name
 
+def _expand_file(filename, incdir):
+    results = []
+    with open(filename, "r") as infile:
+        for line in infile:
+            m = _INCLUDE_RE.match(line)
+            if m:
+                innerfile = os.path.join(incdir, m.group('filename'))
+                innerconts = _expand_file(innerfile, incdir)
+                results.extend(innerconts)
+            else:
+                results.append(line.rstrip())
+    return results
 
 def _main(argv):
     verbose = False
+    incdir = "."
     try:
-        opts, args = getopt.getopt(argv, "hv", ("help", "verbose"))
+        opts, args = getopt.getopt(argv, "hI:v", ("help", "include=", "verbose"))
     except getopt.GetoptError:
         prnt(__doc__, file=sys.stderr)
         sys.exit(1)
@@ -189,6 +203,8 @@ def _main(argv):
             sys.exit(1)
         elif opt in ("-v", "--verbose"):
             verbose = True
+        elif opt in ("-I", "--include"):
+            incdir = arg
         else:
             prnt("Unknown option %s" % opt, file=sys.stderr)
             prnt(__doc__, file=sys.stderr)
@@ -205,13 +221,12 @@ def _main(argv):
     oid_raw = None
     oid_name = None
     dgst_opt = "-sha256"
-    with open(tbscert, "r") as infile:
-        tbsdata = infile.read()
+    tbsdata = _expand_file(tbscert, incdir)
 
     outfd, outname = tempfile.mkstemp(suffix='.tbs')
     outfile = os.fdopen(outfd, 'w')
     lines = []
-    for line in tbsdata.split('\n'):
+    for line in tbsdata:
         m = _OID_RE.match(line)
         if m:
             oid_raw = m.group('oid')

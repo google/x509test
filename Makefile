@@ -200,7 +200,7 @@ show-nssdb: nss-db/cert8.db
 certs:
 	mkdir -p $@
 certs/%.ascii: tbs/%.tbs ca/fake-ca.private.pem scripts/tbs2cert | certs
-	scripts/tbs2cert $< ca/fake-ca.private.pem > $@
+	scripts/tbs2cert -I tbs/fragment $< ca/fake-ca.private.pem > $@
 certs/%.der: certs/%.ascii
 	ascii2der -i $< -o $@
 certs/%.pem: certs/%.der

@@ -12,3 +12,6 @@ Certificate files have the following naming convention:
    their contents.  A description of the error is included in the
    `organizationName` of the `subject`, and a reference to the relevant spec
    section is included in the `locality` of the `subject`.
+
+The `fragment` subdirectory holds common ASCII fragments of certificates,
+which are pulled in with an additional `#include <filename>` directive.
