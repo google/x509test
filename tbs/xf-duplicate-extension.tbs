@@ -71,7 +71,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
         OCTET_STRING {
           SEQUENCE {  # AuthorityKeyIdentifier
-            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+            [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
           }
         }  # extnValue
       }
@@ -80,7 +80,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
         OCTET_STRING {
           SEQUENCE {  # AuthorityKeyIdentifier
-            [0 PRIMITIVE] { `4add06161bbcf668b576f581b6bb621aba5a812f` }  # KeyIdentifier
+            [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
           }
         }  # extnValue
       }

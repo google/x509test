@@ -75,7 +75,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.35 }
         OCTET_STRING {
           SEQUENCE {
-            [0 PRIMITIVE] { `c07a98688d89fbab05640c117daa7d65b8cacc4e` }
+            [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
           }
         }
       }
