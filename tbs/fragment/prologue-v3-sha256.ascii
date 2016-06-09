@@ -1,0 +1,9 @@
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `42822a5b866fbfeb` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature

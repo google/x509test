@@ -1,13 +1,5 @@
 SEQUENCE {  # TBSCertificate
-  [0] {  # ENUMERATED
-    INTEGER { 2 }  # v3
-  }  # version
-  INTEGER { `42822a5b866fbfeb` }  # serialNumber
-  SEQUENCE {  # AlgorithmIdentifier
-    # sha256WithRSAEncryption
-    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
-    NULL {}  # parameters
-  }  # signature
+  #include <prologue-v3-sha256.ascii>
   #include <issuer.ascii>
   #include <validity.ascii>
   SEQUENCE {  # Name
