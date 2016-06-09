@@ -111,10 +111,14 @@ tls-tip-src:
 	cd third_party/tip && $(MAKE) src
 tls-tip-bld: tls-tip-src
 	cd third_party/tip && $(MAKE)
+tls-tip-inst: tls-tip-bld
+	cd third_party/tip && $(MAKE) inst
 tls-stable-src:
 	cd third_party/stable && $(MAKE) src
 tls-stable-bld: tls-stable-src
 	cd third_party/stable && $(MAKE)
+tls-stable-inst: tls-stable-bld
+	cd third_party/stable && $(MAKE) inst
 
 
 ###########################################
