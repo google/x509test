@@ -34,13 +34,7 @@ SEQUENCE {  # TBSCertificate
           }  # extnValue
         }  # value
       }
-      SEQUENCE {  # Extension
-        # keyUsage
-        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
-        OCTET_STRING {
-          BIT_STRING { `0780` }  # KeyUsage
-        }  # extnValue
-      }
+      #include <key-usage.ascii>
       SEQUENCE {  # Extension
         # keyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
