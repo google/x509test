@@ -14,41 +14,7 @@ SEQUENCE {  # TBSCertificate
     GeneralizedTime { "20510517000000-0100" }  # notAfter LEAVE-AS-IS
   }  # validity
   SEQUENCE {  # Name
-    SET {  # RelativeDistinguishedName
-      SEQUENCE {  # AttributeTypeAndValue
-        # countryName
-        OBJECT_IDENTIFIER { 2.5.4.6 }  # type
-        PrintableString { "US" }  # value
-      }
-    }
-    SET {  # RelativeDistinguishedName
-      SEQUENCE {  # AttributeTypeAndValue
-        # stateOrProvinceName
-        OBJECT_IDENTIFIER { 2.5.4.8 }  # type
-        UTF8String { "California" }  # value
-      }
-    }
-    SET {  # RelativeDistinguishedName
-      SEQUENCE {  # AttributeTypeAndValue
-        # localityName
-        OBJECT_IDENTIFIER { 2.5.4.7 }  # type
-        UTF8String { "Mountain View" }  # value
-      }
-    }
-    SET {  # RelativeDistinguishedName
-      SEQUENCE {  # AttributeTypeAndValue
-        # organizationName
-        OBJECT_IDENTIFIER { 2.5.4.10 }  # type
-        UTF8String { "Google Inc" }  # value
-      }
-    }
-    SET {  # RelativeDistinguishedName
-      SEQUENCE {  # AttributeTypeAndValue
-        # commonName
-        OBJECT_IDENTIFIER { 2.5.4.3 }  # type
-        UTF8String { "*.google.com" }  # value
-      }
-    }
+    #include <subject-prefix.ascii>
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # surname
