@@ -30,7 +30,8 @@ endif
 # Tip-code only tools
 X509LINT = third_party/tip/instroot/bin/x509lint
 
-TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs))
+TBS2_FILES = $(subst tbs2/,,$(wildcard tbs2/*.leaf.tbs))
+TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs)) $(subst .leaf.tbs,.tbs,$(TBS2_FILES))
 
 RESULTS_OPENSSL_OK = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_OK = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
@@ -122,6 +123,7 @@ results/nss/$(TLS):
 	mkdir -p $@
 results/x509lint/$(TLS):
 	mkdir -p $@
+
 results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TLS)
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
 results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
@@ -130,6 +132,15 @@ results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 results/x509lint/$(TLS)/%.out: certs/%.pem | results/x509lint/$(TLS)
 	scripts/check-x509lint $(X509LINT) -c $< > $@ 2>&1
+
+results/openssl/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl/$(TLS)
+	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert -untrusted certs2/$*.ca.pem certs2/$*.leaf.pem > $@ 2>&1
+results/gnutls/$(TLS)/%.out: certs2/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
+	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
+results/nss/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss/$(TLS) nss-db/cert8.db
+	scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
+results/x509lint/$(TLS)/%.out: certs2/%.leaf.pem | results/x509lint/$(TLS)
+	echo "Chains not supported by x509lint" > $@
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
@@ -182,6 +193,7 @@ show-nssdb: nss-db/cert8.db
 ###########################################
 # Certificate generation rules.
 ###########################################
+# Rules for certs signed by fake root CA
 certs:
 	mkdir -p $@
 certs/%.ascii: tbs/%.tbs ca/fake-ca.private.pem scripts/tbs2cert | certs
@@ -192,20 +204,34 @@ certs/%.pem: certs/%.der
 	$(OPENSSL) x509 -in $< -inform der -out $@
 certs/%.chain.pem: certs/%.pem ca/fake-ca.cert
 	cat $< ca/fake-ca.cert > $@
+# Rules for certs signed by intermediate CA
+certs2:
+	mkdir -p $@
+# CA cert signed by fake root CA
+certs2/%.ca.ascii: tbs2/%.ca.tbs ca/fake-ca.private.pem scripts/tbs2cert | certs2
+	scripts/tbs2cert -I tbs/fragment -p ca/fake-ca.private.pem $< > $@
+# Leaf cert signed by fake intermediate CA
+certs2/%.leaf.ascii: tbs2/%.leaf.tbs cfg/fake-intermediate-ca.private.pem scripts/tbs2cert | certs2
+	scripts/tbs2cert -I tbs/fragment -p cfg/fake-intermediate-ca.private.pem $< > $@
+certs2/%.der: certs2/%.ascii
+	ascii2der -i $< -o $@
+certs2/%.pem: certs2/%.der
+	$(OPENSSL) x509 -in $< -inform der -out $@
+certs2/%.chain.pem: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert
+	cat $^ > $@
 
 
 ###########################################
 # Tidy-up.
 ###########################################
 clean:
-	rm -f *.ascii
-	rm -f *.pyc
-	rm -f *.chain.pem
+	rm -f scripts/*.pyc
 	rm -rf results
+	rm -rf certs
+	rm -rf certs2
+	rm -rf nss-db
 
 distclean: clean
 	rm -rf ca
-	rm -rf certs
-	rm -rf nss-db
 
 .SECONDARY:  # Keep intermediates

@@ -2,23 +2,50 @@
 # Wrapper for certtool, to ensure a validation result is recorded
 CERTUTIL=$1
 CERT=$2
-# Import the cert into the NSS database, which can fail for invalid certs
+CERT2=$3
+# Import the cert(s) into the NSS database, which can fail for invalid certs
 OUTPUT=`$CERTUTIL -A -d nss-db -n "Cert from $CERT" -t ,, -i $CERT`
 RESULT=$?
 if [ $RESULT != 0 ]; then
     echo "TLS-VALIDATION: Failed"
     exit
 fi
+if [ "$CERT2" != "" ]; then
+    OUTPUT=`$CERTUTIL -A -d nss-db -n "Cert from $CERT2" -t ,, -i $CERT2`
+    RESULT=$?
+    if [ $RESULT != 0 ]; then
+        echo "TLS-VALIDATION: Failed"
+        exit
+    fi
+fi
+
 # Perform explicit validation.
 OUTPUT=`$CERTUTIL -V -d nss-db -n "Cert from $CERT" -u V,,`
 RESULT=$?
-# Remove the cert
+if [ "$CERT2" != "" ]; then
+    OUTPUT2=`$CERTUTIL -V -d nss-db -n "Cert from $CERT2" -u V,,`
+    RESULT2=$?
+fi
+
+# Remove the cert(s)
 certutil -D -d nss-db -n "Cert from $CERT"
+if [ "$CERT2" != "" ]; then
+    certutil -D -d nss-db -n "Cert from $CERT2"
+fi
 
 # Now output results.
 echo "$OUTPUT"
 if [ $RESULT != 0 ]; then
     echo "TLS-VALIDATION: Failed"
 else
-    echo "TLS-VALIDATION: Success"
+    if [ "$CERT2" != "" ]; then
+        echo "$OUTPUT2"
+        if [ $RESULT != 0 ]; then
+            echo "TLS-VALIDATION: Failed"
+        else
+            echo "TLS-VALIDATION: Success"
+        fi
+    else
+        echo "TLS-VALIDATION: Success"
+    fi
 fi

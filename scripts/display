@@ -14,7 +14,6 @@ _subject_re = re.compile('^subject= ' +
                          '(/dnQualifier=(?P<dnQualifier>[^/]+))?' +
                          '(/GN=(?P<GN>[^/]+))?' +
                          '\s*$')
-'subject= /C=US/ST=California/L=Mountain View/O=Google Inc/CN=*.google.com'
 
 def display(expect, bld, tool):
     needle = re.compile("TLS-VALIDATION: %s" %
@@ -49,6 +48,8 @@ def display(expect, bld, tool):
     case_text = {}
     for case in sorted(failures.keys()):
         certname = "certs/%s-%s.der" % (prefix, case)
+        if not os.path.isfile(certname):
+            certname = "certs2/%s-%s.leaf.der" % (prefix, case)
         subject = os.popen('openssl x509 -in %s -inform der -subject -noout' % certname).read()
         m = _subject_re.match(subject)
         if m and m.group('GN'):

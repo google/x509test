@@ -1,0 +1,45 @@
+  SEQUENCE {  # Name
+    SET {
+      SEQUENCE {
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }
+        PrintableString { "GB" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # localityName
+        OBJECT_IDENTIFIER { 2.5.4.7 }
+        UTF8String { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }
+        UTF8String { "Google" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationUnitName
+        OBJECT_IDENTIFIER { 2.5.4.11 }
+        UTF8String { "Eng" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }
+        UTF8String { "FakeIntermediateAuthority" }
+      }
+    }
+  }  # issuer
+

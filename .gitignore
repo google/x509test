@@ -2,4 +2,5 @@ ca/
 *.pyc
 nss-db/
 certs/
+certs2/
 results/
