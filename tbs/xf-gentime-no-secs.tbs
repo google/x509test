@@ -3,7 +3,7 @@ SEQUENCE {  # TBSCertificate
   #include <issuer.ascii>
   SEQUENCE {  # Validity
     UTCTime { "160217102700Z" }  # notBefore
-    UTCTime { "205105171301Z" }  # notAfter LEAVE-AS-IS
+    GeneralizedTime { "205105171301Z" }  # notAfter LEAVE-AS-IS
   }  # validity
   SEQUENCE {  # Name
     #include <subject-prefix.ascii>
