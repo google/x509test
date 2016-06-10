@@ -22,6 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <ca-public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
       SEQUENCE {
         # basicConstraints
         OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints

@@ -22,6 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
       SEQUENCE {  # Extension
         # policyMappings
         OBJECT_IDENTIFIER { 2.5.29.33 }  # extnID = id-ce-policyMappings

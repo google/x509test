@@ -22,6 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <ca-public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
       #include <ca-constraints-usage.ascii>
       SEQUENCE {
         # nameConstraints

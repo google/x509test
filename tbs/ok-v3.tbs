@@ -22,6 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
       SEQUENCE {  # Extension
         # extKeyUsage
         OBJECT_IDENTIFIER { 2.5.29.37 }  # extnID = id-ce-extKeyUsage
