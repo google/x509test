@@ -4,20 +4,19 @@
 # Options for the `req` tool (`man req`).
 default_bits        = 2048
 distinguished_name  = req_distinguished_name
+prompt              = no
 # SHA-1 is deprecated, so use SHA-2 instead.
 default_md          = sha256
 # Extension to add when the -x509 option is used.
 x509_extensions     = v3_ca
 
 [ req_distinguished_name ]
-# See <https://en.wikipedia.org/wiki/Certificate_signing_request>.
-countryName                     = Country Name (2 letter code)
-stateOrProvinceName             = State or Province Name
-localityName                    = Locality Name
-0.organizationName              = Organization Name
-organizationalUnitName          = Organizational Unit Name
-commonName                      = Common Name
-
+C=GB
+ST=London
+L=London
+O=Google
+OU=Eng
+CN=FakeCertificateAuthority
 
 [ v3_ca ]
 subjectKeyIdentifier = 01020304
