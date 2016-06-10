@@ -47,27 +47,14 @@ SEQUENCE {  # TBSCertificate
       }
     }
   }  # subject
-  SEQUENCE {  # SubjectPublicKeyInfo
-    SEQUENCE {  # AlgorithmIdentifier
-      # rsaEncryption
-      OBJECT_IDENTIFIER { 1.2.840.113549.1.1.1 }  # algorithm
-      NULL {}  # parameters
-    }  # algorithm
-    BIT_STRING {
-      `00`
-      SEQUENCE {
-        INTEGER { `009c2a04775cd850913a06a382e0d85048bc893ff119701a88467ee08fc5f189ce21ee5afe610db7324489a0740b534f55a4ce826295eeeb595fc6e1058012c45e943fbc5b4838f453f724e6fb91e915c4cff4530df44afc9f54de7dbea06b6f87c0d0501f28300340da0873516c7fff3a3ca737068ebd4b1104eb7d24dee6f9fc3171fb94d560f32e4aaf42d2cbeac46a1ab2cc53dd154b8b1fc819611fcd9da83e632b8435696584c819c54622f85395bee3804a10c62aecba972011c739991004a0f0617a95258c4e5275e2b6ed08ca14fcce226ab34ecf46039797037ec0b1de7baf4533cfba3e71b7def42525c20d35899d9dfb0e1179891e37c5af8e7269` }
-        INTEGER { 65537 }
-      }
-    }  # subjectPublicKey
-  }  # subjectPublicKeyInfo
+  #include <ca-public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
       SEQUENCE {  # Extension
         # subjectKeyIdentifier
         OBJECT_IDENTIFIER { 2.5.29.14 }
         OCTET_STRING {
-          OCTET_STRING { `4add06161bbcf668b576f581b6bb621aba5a812f` }
+          OCTET_STRING { `04030201` }
         }
       }
       SEQUENCE {  # Extension
@@ -98,7 +85,7 @@ SEQUENCE {  # TBSCertificate
         OCTET_STRING {
           SEQUENCE {
             BOOLEAN { `ff` }  # cA
-            INTEGER { 0 }  # pathLenConstraint
+            INTEGER { 5 }  # pathLenConstraint
           }  # extnValue
         }  # value
       }
