@@ -22,25 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
-      SEQUENCE {  # Extension
-        # extKeyUsage
-        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
-        BOOLEAN { `ff` }  # critical
-        OCTET_STRING {
-          BIT_STRING { `07ff80` }
-        }  # value
-      }
-      SEQUENCE {
-        # basicConstraints
-        OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints
-        BOOLEAN { `ff` }  # critical
-        OCTET_STRING {
-          SEQUENCE {
-            BOOLEAN { `ff` }  # cA
-            INTEGER { 0 }  # pathLenConstraint
-          }  # extnValue
-        }  # value
-      }
+      #include <ca-constraints-usage.ascii>
     }  # extensions
   }
 }  # tbsCertificate
