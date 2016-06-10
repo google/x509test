@@ -8,28 +8,20 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: key usage (Section 4.2.1.3)...'" }  # value
+        UTF8String { "RFC5280 s4.2.1.9 'Where it appears, the pathLenConstraint field MUST be greater than or equal to zero.'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Key Usage extension" }  # value
+        UTF8String { "Basic Constraints extension with negative path len" }  # value
       }
     }
   }  # subject
-  #include <public-key.ascii>
+  #include <ca-public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
-      SEQUENCE {  # Extension
-        # extKeyUsage
-        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
-        BOOLEAN { `ff` }  # critical
-        OCTET_STRING {
-          BIT_STRING { `07ff80` }
-        }  # value
-      }
       SEQUENCE {
         # basicConstraints
         OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints
@@ -37,8 +29,16 @@ SEQUENCE {  # TBSCertificate
         OCTET_STRING {
           SEQUENCE {
             BOOLEAN { `ff` }  # cA
-            INTEGER { 0 }  # pathLenConstraint
+            INTEGER { -1 }  # pathLenConstraint
           }  # extnValue
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          BIT_STRING { `07ff80` }
         }  # value
       }
     }  # extensions
