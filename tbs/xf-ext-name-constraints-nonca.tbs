@@ -8,21 +8,20 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: ...name constraints (Section 4.2.1.10)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.10 'The name constraints extension ... MUST be used only in a CA certificate'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Name Constraints extension" }  # value
+        UTF8String { "Name Constraints extension in non-CA cert" }  # value
       }
     }
   }  # subject
-  #include <ca-public-key.ascii>
+  #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
-      #include <ca-constraints-usage.ascii>
       SEQUENCE {
         # nameConstraints
         OBJECT_IDENTIFIER { 2.5.29.30 }  # extnID = id-ce-nameConstraints
