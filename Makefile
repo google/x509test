@@ -61,24 +61,24 @@ check-xf: $(RESULTS_XF)
 	@scripts/display Invalid $(TLS)
 check-openssl: check-openssl-ok check-openssl-xf
 check-openssl-ok: $(RESULTS_OPENSSL_OK)
-	@scripts/display Valid $(TLS) OpenSSL
+	@scripts/display --tool OpenSSL Valid $(TLS)
 check-openssl-xf: $(RESULTS_OPENSSL_XF)
-	@scripts/display Invalid $(TLS) OpenSSL
+	@scripts/display --tool OpenSSL Invalid $(TLS)
 check-gnutls: check-gnutls-ok check-gnutls-xf
 check-gnutls-ok: $(RESULTS_GNUTLS_OK)
-	@scripts/display Valid $(TLS) GnuTLS
+	@scripts/display --tool GnuTLS Valid $(TLS)
 check-gnutls-xf: $(RESULTS_GNUTLS_XF)
-	@scripts/display Invalid $(TLS) GnuTLS
+	@scripts/display --tool GnuTLS Invalid $(TLS)
 check-nss: check-nss-ok check-nss-xf
 check-nss-ok: $(RESULTS_NSS_OK)
-	@scripts/display Valid $(TLS) NSS
+	@scripts/display --tool NSS Valid $(TLS)
 check-nss-xf: $(RESULTS_NSS_XF)
-	@scripts/display Invalid $(TLS) NSS
+	@scripts/display --tool NSS Invalid $(TLS)
 check-x509lint: check-x509lint-ok check-x509lint-xf
 check-x509lint-ok: $(RESULTS_X509LINT_OK)
-	@scripts/display Valid tip x509lint
+	@scripts/display --tool x509lint Valid $(TLS)
 check-x509lint-xf: $(RESULTS_X509LINT_XF)
-	@scripts/display Invalid tip x509lint
+	@scripts/display --tool x509lint Invalid $(TLS)
 
 results-openssl: $(RESULTS_OPENSSL)
 results-gnutls: $(RESULTS_GNUTLS)
@@ -150,6 +150,10 @@ show-nss-%: certs/%.pem nss-db/cert8.db
 	$(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
 	$(CERTUTIL) -L -d nss-db -n "Cert from $<"
 	$(CERTUTIL) -D -d nss-db -n "Cert from $<"
+
+show2-openssl-%: certs2/%.leaf.pem certs2/%.ca.pem
+	$(OPENSSL) x509 -inform pem -in certs2/$*.ca.pem -text -noout
+	$(OPENSSL) x509 -inform pem -in certs2/$*.leaf.pem -text -noout
 
 
 ###########################################

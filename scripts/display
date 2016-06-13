@@ -1,8 +1,19 @@
 #!/usr/bin/env python
+'''Display results of tests
+
+Usage: display [opts] (Valid|Invalid) <bld>
+
+  -t <tool>  / --tool <tool>  Only display results for specific tool
+  -g <pat>   / --grep <pat>   Only display results that contain pattern
+'''
+
 import sys
 import re
+import getopt
 import glob
 import os
+
+from point_six import prnt
 
 _subject_re = re.compile('^subject= ' +
                          '(/C=(?P<C>[^/]+))?' +
@@ -15,12 +26,15 @@ _subject_re = re.compile('^subject= ' +
                          '(/GN=(?P<GN>[^/]+))?' +
                          '\s*$')
 
-def display(expect, bld, tool):
+def display(expect, bld, tool, grep=None):
     needle = re.compile("TLS-VALIDATION: %s" %
                         ("Failed" if expect == "Valid" else "Success"))
     prefix = "ok" if expect == "Valid" else "xf"
     subdir = tool.lower() if tool else '*'
-    haystack = 'results/%s/%s/%s-*' % (subdir, bld, prefix)
+    if grep:
+        haystack = 'results/%s/%s/%s-*%s*' % (subdir, bld, prefix, grep)
+    else:
+        haystack = 'results/%s/%s/%s-*' % (subdir, bld, prefix)
     submsg = "%s " % tool if tool else ""
     fname_re = re.compile("results/(?P<subdir>\S+)/"
                           "(?P<bld>\S+)/(?P<prefix>..)-(?P<case>.*).out")
@@ -58,15 +72,38 @@ def display(expect, bld, tool):
             case_text[case] = subject.rstrip()
 
     if expect == "Valid":
-        print "*** Valid certificates that failed %svalidation:" % submsg
+        prnt("*** Valid certificates that failed %svalidation:" % submsg)
     else:
-        print "*** Invalid certificates that passed %svalidation:" % submsg
+        prnt("*** Invalid certificates that passed %svalidation:" % submsg)
     subdirs = list(sorted(subdirs))
     for case in sorted(failures.keys()):
         flist = [" %-*s" % (len(s), s if s in failures[case] else '') for s in subdirs]
-        print "  %-30s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case])
+        prnt("  %-30s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case]))
 
 
 if __name__ == "__main__":
-    display(sys.argv[1], sys.argv[2],
-            sys.argv[3] if len(sys.argv) > 3 else None)
+    tool = None
+    grep = None
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "ht:g:v", ("help", "tool=", "grep=", "verbose"))
+    except getopt.GetoptError:
+        prnt(__doc__, file=sys.stderr)
+        sys.exit(1)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            prnt(__doc__, file=sys.stderr)
+            sys.exit(1)
+        elif opt in ("-t", "--tool"):
+            tool = arg
+        elif opt in ("-g", "--grep"):
+            grep = arg
+        else:
+            prnt("Unknown option %s" % opt, file=sys.stderr)
+            prnt(__doc__, file=sys.stderr)
+            sys.exit(1)
+
+    if len(args) != 2:
+        prnt(__doc__, file=sys.stderr)
+        sys.exit(1)
+
+    display(args[0], args[1], tool, grep)
