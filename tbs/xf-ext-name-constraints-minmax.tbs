@@ -8,14 +8,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: ...name constraints (Section 4.2.1.10)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.10 'the minimum MUST be zero, and maximum MUST be absent'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Name Constraints extension" }  # value
+        UTF8String { "Name Constraints extension including min-max" }  # value
       }
     }
   }  # subject
@@ -33,6 +33,8 @@ SEQUENCE {  # TBSCertificate
             [0] {  # GeneralSubtrees
               SEQUENCE {  # GeneralSubtree
                 [2 PRIMITIVE] { "*.google.co.uk" }  # base = dNSName
+                [0 PRIMITIVE] { 3 }  # minimum
+                [1 PRIMITIVE] { 7 }  # maximum
               }
             }  # permittedSubtrees
             [1] {  # GeneralSubtrees

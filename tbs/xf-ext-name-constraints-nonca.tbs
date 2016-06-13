@@ -32,8 +32,6 @@ SEQUENCE {  # TBSCertificate
             [0] {  # GeneralSubtrees
               SEQUENCE {  # GeneralSubtree
                 [2 PRIMITIVE] { "*.google.co.uk" }  # base = dNSName
-                [0 PRIMITIVE] { 3 }  # minimum
-                [1 PRIMITIVE] { 7 }  # maximum
               }
             }  # permittedSubtrees
             [1] {  # GeneralSubtrees

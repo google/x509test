@@ -8,14 +8,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: ...name constraints (Section 4.2.1.10)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.10 'Conforming CAs MUST mark this extension as critical'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Name Constraints extension" }  # value
+        UTF8String { "Name Constraints extension marked non-critical" }  # value
       }
     }
   }  # subject
@@ -27,7 +27,6 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {
         # nameConstraints
         OBJECT_IDENTIFIER { 2.5.29.30 }  # extnID = id-ce-nameConstraints
-        BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {  # NameConstraints
             [0] {  # GeneralSubtrees
