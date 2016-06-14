@@ -200,6 +200,9 @@ certs2/%.ca.ascii: tbs2/%.ca.tbs ca/fake-ca.private.pem scripts/tbs2cert | certs
 # Leaf cert signed by fake intermediate CA
 certs2/%.leaf.ascii: tbs2/%.leaf.tbs cfg/fake-intermediate-ca.private.pem scripts/tbs2cert | certs2
 	scripts/tbs2cert -I tbs/fragment -p cfg/fake-intermediate-ca.private.pem $< > $@
+# special case: use DSA key
+certs2/ok-inherited-keyparams.leaf.ascii: tbs2/ok-inherited-keyparams.leaf.tbs cfg/fake-intermediate-ca-dsa.private.pem scripts/tbs2cert | certs2
+	scripts/tbs2cert -I tbs/fragment -p cfg/fake-intermediate-ca-dsa.private.pem $< > $@
 certs2/%.der: certs2/%.ascii
 	ascii2der -i $< -o $@
 certs2/%.pem: certs2/%.der

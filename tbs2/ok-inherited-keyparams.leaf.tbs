@@ -1,0 +1,38 @@
+SEQUENCE {  # TBSCertificate
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `42822a5b866fbfeb` }  # serialNumber
+  # Intermediate CA has a DSA public key so sign with DSA-with-SHA1
+  SEQUENCE {  # AlgorithmIdentifier
+    # dsa-with-sha1
+    OBJECT_IDENTIFIER { 1.2.840.10040.4.3 }  # algorithm
+    # No parameters -- inherited from CA certificate
+    NULL {}  # parameters
+  }  # signature
+  #include <intermediate-name.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC3279 s2.2.2 'The DSA parameters in the subjectPublicKeyInfo field of the certificate of the issuer SHALL apply to the verification of the signature.'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Leaf cert omits DSA parameters for signature" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <key-usage.ascii>
+    }  # extensions
+  }
+}  # tbsCertificate

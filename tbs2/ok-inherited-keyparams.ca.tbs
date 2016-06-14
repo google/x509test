@@ -1,0 +1,35 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  #include <intermediate-name.ascii>
+  # Generated via:
+  #  - openssl dsaparam -out cfg/fake-intermediate-ca-dsa.param.pem 2048
+  #  - openssl dsaparam -in cfg/fake-intermediate-ca-dsa.param.pem -text -noout  # show it
+  #  - openssl gendsa -out cfg/fake-intermediate-ca-dsa.private.pem cfg/fake-intermediate-ca.dsaparam.pem
+  #  - openssl dsa -in cfg/fake-intermediate-ca-dsa.private.pem -text -noout  # show it
+  #  - openssl req -new -x509 -config cfg/fake-intermediate-ca.cnf -days 365 -extensions v3_ca -inform pem -key cfg/fake-intermediate-ca-dsa.private.pem -outform der -out temp.der
+  #  - der2ascii -i temp.der -o temp.ascii
+  #  - manually extract the subjectPublicKeyInfo
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # dsa
+      OBJECT_IDENTIFIER { 1.2.840.10040.4.1 }  # algorithm
+      SEQUENCE {
+        INTEGER { `00b09c877000bdb409497f4dfe41e4804b751d0036ea7ab33148d3fcf7a4f994845e010ba433a7c613bb4f0725032d7e9221fe7fe2aa7ad310449013aae59aaa688442b710e20870ed1166016a3f46049e641c6cb8d6466e2eb3f14687726b078b3bf9d1d80f22c1ac952d3cdf59c10ed96e2a98e2f16dae336e0cc58fc02eb74e2241fe58793623013c4920e42969f905611e2be93350a1f44f025e0133a65da5cdc5588a2f24ed861303c95ba8b72a7f2b57fd77a3f3f7ec0daa71ef90578596eae87d3d765ab6bcaa4fa45748efb1d427331af74dc124a8d147406da59ad903ef56cf1ac58ab21096685c60a13e8ebd1c197e0cc340552460ce1e591c9494ed` }  # P
+        INTEGER { `00f67eb8e1fd6ea7ff9ffd14aea7ee02867726271ee166632f6af75668b9318659` }  # Q
+        INTEGER { `6aa612ae9ac80e11afd0f846d9f60f38c28e4edcaafc827f88118c977b02f22089cbc6b23479a7ec467b6203fae89734f8f19b2fddee8eac61f2f889916690a2508cda8054f16765265927e2b2b1e4b5e67596d24114f56af0ae74c453219f3d42bfc9545d188a381efee755ad628ac4b93b745fc198e5146f6de8d4096fe8b05636ef2258e576b2a63fda85b7dd03b9fe4b6c6d318fa724406181a1ebc678a0d4dff369e9becd7739c3bf1f242d7c32196c4b70a98c07810d361ffd344abcc6b75760d5ee58dad4c57827cf755968f3dc323b619debb5b0300706b82e26c2772ecd7ddb7b7bad76b390abca98ea762dfc008f032806d2a0aad12aac21d9b035` }  #  G
+      }  # parameters
+    }
+    BIT_STRING {
+      `00`
+      INTEGER { `008061731ca0f91bb3f1b4d34fbbe6bf4a5a1ac9a544c892e53456b1c925b973db52274e4248d30bcdd1ca8e2a03bf52efbea285495e1b78d35eb187dbf2a08d3d7a8a8c62857d4d065ad81fcc2adaec32315c5f0963393496d4793f5a733de61eb7d22a672d76423ab4d92db32a317bde72c77f17b75c91cb25599ce60e281c69587d8693de96cccec4b2f3c334fecdc248233d24346e393526b4cdfd08b75c2859c36e360bf2dff188433e38fb09d13bce0d1ab91815dcc8cbe195806389c682160f26fd5239a893082233086c3ce6d34f43895e5ad8ed97a4e39aded12d664b9b119ad2cb19759eab44f4c85fa5fb8c03eaf655fe874117e6de72fafd0974fa` }  # public key
+    }  # subjectPublicKey
+  }  # subjectPublicKeyInfo
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <ca-constraints-usage.ascii>
+    }  # extensions
+  }
+}  # tbsCertificate

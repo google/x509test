@@ -29,6 +29,7 @@ from datetime import datetime, timedelta
 
 _OPENSSL_OPTS = {
     "sha256WithRSAEncryption": "-sha256",
+    "dsa-with-sha1": "-sha1",
 }
 _INCLUDE_RE = re.compile(r'\s*#include\s+<(?P<filename>[^>]+)>\s*')
 
@@ -246,16 +247,21 @@ def _main(argv):
     outfile = os.fdopen(outfd, 'w')
     lines = []
     for line in tbsdata:
-        m = _OID_RE.match(line)
-        if m:
-            oid_raw = m.group('oid')
-            oid_name = _OID_NAMES.get(oid_raw, None)
-            opt = _OPENSSL_OPTS.get(oid_name, None)
-            if opt is not None:
-                if verbose:
-                    print('Found algorithm %s (%s) => option %s' %
-                          (oid_raw, oid_name, opt), file=sys.stderr)
-                dgst_opt = opt
+        if oid_raw is None:
+            m = _OID_RE.match(line)
+            if m:
+                oid_raw = m.group('oid')
+                oid_name = _OID_NAMES.get(oid_raw, None)
+                opt = _OPENSSL_OPTS.get(oid_name, None)
+                if opt is not None:
+                    if verbose:
+                        print('Found algorithm %s (%s) => option %s' %
+                              (oid_raw, oid_name, opt), file=sys.stderr)
+                    dgst_opt = opt
+                else:
+                    if verbose:
+                        print('Found algorithm %s (%s), unknown digest option' %
+                              (oid_raw, oid_name), file=sys.stderr)
         utcnow = datetime.utcnow()
         start = utcnow - timedelta(60)  # 60d ago
         end = utcnow + timedelta(365*3)  # ~3 years ahead
@@ -268,7 +274,7 @@ def _main(argv):
                          (m1.group('indent'), start.strftime("%y%m%d%H%M%S")))
         elif m2:
             if verbose:
-                print("Seting notBefore to %s" % end, file=sys.stderr)
+                print("Seting notAfter to %s" % end, file=sys.stderr)
             lines.append('%sUTCTime { "%sZ" }  # notAfter' %
                          (m2.group('indent'), end.strftime("%y%m%d%H%M%S")))
         else:
