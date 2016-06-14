@@ -17,6 +17,8 @@
 
 Usage: tbs2cert tbscert.ascii privkey.pem
 '''
+
+from __future__ import print_function
 import sys
 import os
 import os.path
@@ -24,7 +26,6 @@ import re
 import getopt
 import tempfile
 from datetime import datetime, timedelta
-from point_six import prnt
 
 _OPENSSL_OPTS = {
     "sha256WithRSAEncryption": "-sha256",
@@ -210,11 +211,11 @@ def _main(argv):
     try:
         opts, args = getopt.getopt(argv, "hI:p:v", ("help", "include=", "privkey=", "verbose"))
     except getopt.GetoptError:
-        prnt(__doc__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
         sys.exit(1)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            prnt(__doc__, file=sys.stderr)
+            print(__doc__, file=sys.stderr)
             sys.exit(1)
         elif opt in ("-v", "--verbose"):
             verbose = True
@@ -223,12 +224,12 @@ def _main(argv):
         elif opt in ("-p", "--privkey"):
             privkey = arg
         else:
-            prnt("Unknown option %s" % opt, file=sys.stderr)
-            prnt(__doc__, file=sys.stderr)
+            print("Unknown option %s" % opt, file=sys.stderr)
+            print(__doc__, file=sys.stderr)
             sys.exit(1)
 
     if len(args) != 1:
-        prnt(__doc__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
         sys.exit(1)
 
     tbscert = args[0]
@@ -252,8 +253,8 @@ def _main(argv):
             opt = _OPENSSL_OPTS.get(oid_name, None)
             if opt is not None:
                 if verbose:
-                    prnt('Found algorithm %s (%s) => option %s' %
-                         (oid_raw, oid_name, opt), file=sys.stderr)
+                    print('Found algorithm %s (%s) => option %s' %
+                          (oid_raw, oid_name, opt), file=sys.stderr)
                 dgst_opt = opt
         utcnow = datetime.utcnow()
         start = utcnow - timedelta(60)  # 60d ago
@@ -262,12 +263,12 @@ def _main(argv):
         m2 = _END_RE.match(line)
         if m1:
             if verbose:
-                prnt("Seting notBefore to %s" % start, file=sys.stderr)
+                print("Seting notBefore to %s" % start, file=sys.stderr)
             lines.append('%sUTCTime { "%sZ" }  # notBefore' %
                          (m1.group('indent'), start.strftime("%y%m%d%H%M%S")))
         elif m2:
             if verbose:
-                prnt("Seting notBefore to %s" % end, file=sys.stderr)
+                print("Seting notBefore to %s" % end, file=sys.stderr)
             lines.append('%sUTCTime { "%sZ" }  # notAfter' %
                          (m2.group('indent'), end.strftime("%y%m%d%H%M%S")))
         else:
@@ -275,32 +276,32 @@ def _main(argv):
 
     # Send modified TBS to DER for signature.
     for line in lines:
-        prnt(line, file=outfile)
+        print(line, file=outfile)
     outfile.close()
     dgst_cmd = 'ascii2der -i %s | openssl dgst %s -sign %s' % (outname, dgst_opt, privkey)
     if verbose:
-        prnt('Invoke: %s' % dgst_cmd, file=sys.stderr)
+        print('Invoke: %s' % dgst_cmd, file=sys.stderr)
     sig_bytes = os.popen(dgst_cmd).read()
     os.unlink(outname)
     sig_hex = ''.join(['%02x' % ord(b) for b in sig_bytes])
     # Now output ASCII full certificate
-    prnt('SEQUENCE {')
+    print('SEQUENCE {')
     for line in lines:
-        prnt('  %s' % line)
-    prnt('  SEQUENCE {')
+        print('  %s' % line)
+    print('  SEQUENCE {')
     dgst_oid = _oid_for_opt(dgst_opt)
     if dgst_oid is None:
         dgst_oid = oid_name
     if verbose:
-        prnt('Add signature with algorithm OID %s' % dgst_oid, file=sys.stderr)
-    prnt('    OBJECT_IDENTIFIER { %s }' % dgst_oid)
-    prnt('    NULL {}')  # algorithm params @@@@
-    prnt('  }')
-    prnt('  BIT_STRING {')
-    prnt('    `00`')
-    prnt('    `%s`' % sig_hex)
-    prnt('  }')
-    prnt('}')
+        print('Add signature with algorithm OID %s' % dgst_oid, file=sys.stderr)
+    print('    OBJECT_IDENTIFIER { %s }' % dgst_oid)
+    print('    NULL {}')  # algorithm params @@@@
+    print('  }')
+    print('  BIT_STRING {')
+    print('    `00`')
+    print('    `%s`' % sig_hex)
+    print('  }')
+    print('}')
 
 if __name__ == "__main__":
     _main(sys.argv[1:])

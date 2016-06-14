@@ -21,13 +21,13 @@ Usage: display [opts] (Valid|Invalid) <bld>
   -g <pat>   / --grep <pat>   Only display results that contain pattern
 '''
 
+from __future__ import print_function
 import sys
 import re
 import getopt
 import glob
 import os
 
-from point_six import prnt
 
 _subject_re = re.compile('^subject= ' +
                          '(/C=(?P<C>[^/]+))?' +
@@ -86,13 +86,13 @@ def display(expect, bld, tool, grep=None):
             case_text[case] = subject.rstrip()
 
     if expect == "Valid":
-        prnt("*** Valid certificates that failed %svalidation:" % submsg)
+        print("*** Valid certificates that failed %svalidation:" % submsg)
     else:
-        prnt("*** Invalid certificates that passed %svalidation:" % submsg)
+        print("*** Invalid certificates that passed %svalidation:" % submsg)
     subdirs = list(sorted(subdirs))
     for case in sorted(failures.keys()):
         flist = [" %-*s" % (len(s), s if s in failures[case] else '') for s in subdirs]
-        prnt("  %-30s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case]))
+        print("  %-30s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case]))
 
 
 if __name__ == "__main__":
@@ -101,23 +101,23 @@ if __name__ == "__main__":
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht:g:v", ("help", "tool=", "grep=", "verbose"))
     except getopt.GetoptError:
-        prnt(__doc__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
         sys.exit(1)
     for opt, arg in opts:
         if opt in ("-h", "--help"):
-            prnt(__doc__, file=sys.stderr)
+            print(__doc__, file=sys.stderr)
             sys.exit(1)
         elif opt in ("-t", "--tool"):
             tool = arg
         elif opt in ("-g", "--grep"):
             grep = arg
         else:
-            prnt("Unknown option %s" % opt, file=sys.stderr)
-            prnt(__doc__, file=sys.stderr)
+            print("Unknown option %s" % opt, file=sys.stderr)
+            print(__doc__, file=sys.stderr)
             sys.exit(1)
 
     if len(args) != 2:
-        prnt(__doc__, file=sys.stderr)
+        print(__doc__, file=sys.stderr)
         sys.exit(1)
 
     display(args[0], args[1], tool, grep)
