@@ -69,6 +69,9 @@ The project is organized as follows.
    certificates are in the form of the `TBSCertificate` ASN.1 type, and they
    pull in shared common fragments (from the `tbs/fragment/` subdirectory)
    using a `#include` extension to the ASCII format.
+ - The `tbs2/` directory holds pairs of certificates where the leaf
+   certificate (`*.leaf.tbs`) is signed by an intermediate CA certificate
+   (`*.ca.tbs`).
  - The `scripts/` directory holds scripts that allow the certificates to be
    fed to the different TLS implementations and their results checked.
  - The `cfg/` directory holds additional configuration files, e.g. for
