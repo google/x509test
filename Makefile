@@ -3,25 +3,40 @@
 # Prerequisite: der2ascii and ascii2der from:
 #   `go get github.com/google/der-ascii/cmd/...`
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  LDPATH_VAR=DYLD_LIBRARY_PATH
+else
+  LDPATH_VAR=LD_LIBRARY_PATH
+endif
+
 # Examine the TLS environment variable to determine which tools to test
 TLS ?= installed
 ifeq ($(TLS),installed)
   # Use installed versions, assumed to be in path
-  PREREQS = libnss3-tools gnutls-bin openssl
-  DEPS = pkg-install
+  ifeq ($(UNAME_S),Darwin)
+    PREREQS = nss gnutls openssl
+    DEPS = port-install
+    CERTTOOL = $(shell command -v gnutls-certtool 2> /dev/null)
+  else
+    PREREQS = libnss3-tools gnutls-bin openssl
+    DEPS = pkg-install
+    CERTTOOL = $(shell command -v certtool 2> /dev/null)
+  endif
   OPENSSL = $(shell command -v openssl 2> /dev/null)
   CERTUTIL = $(shell command -v certutil 2> /dev/null)
-  CERTTOOL = $(shell command -v certtool 2> /dev/null)
 else ifeq ($(TLS),stable)
   # Use local versions built from stable.  Run `make tls-stable-bld` to populate.
   DEPS = tls-stable-bld
   OPENSSL = third_party/stable/instroot/bin/openssl
-  CERTUTIL = third_party/stable/instroot/bin/certutil
+  CERTUTIL_ENV = $(LDPATH_VAR)=third_party/stable/instroot/lib
+  CERTUTIL =  third_party/stable/instroot/bin/certutil
   CERTTOOL = third_party/stable/instroot/bin/certtool
 else ifeq ($(TLS),tip)
   # Use local versions built from stable.  Run `make tls-tip-bld` to populate.
   DEPS = tls-tip-bld
   OPENSSL = third_party/tip/instroot/bin/openssl
+  CERTUTIL_ENV = $(LDPATH_VAR)=third_party/tip/instroot/lib
   CERTUTIL = third_party/tip/instroot/bin/certutil
   CERTTOOL = third_party/tip/instroot/bin/certtool
 else
@@ -95,6 +110,8 @@ results-nss: $(RESULTS_NSS)
 deps: $(DEPS)
 pkg-install:
 	sudo apt-get install $(PREREQS)
+port-install:
+	sudo port install $(PREREQS)
 show-tls:
 	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL)
 
@@ -133,23 +150,23 @@ results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TL
 results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
 results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
-	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
+	$(CERTUTIL_ENV) scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 
 results/openssl/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl/$(TLS)
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert -untrusted certs2/$*.ca.pem certs2/$*.leaf.pem > $@ 2>&1
 results/gnutls/$(TLS)/%.out: certs2/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
 results/nss/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss/$(TLS) nss-db/cert8.db
-	scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
+	$(CERTUTIL_ENV) scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
 show-gnutls-%: certs/%.pem
 	$(CERTTOOL) --certificate-info --infile $<
 show-nss-%: certs/%.pem nss-db/cert8.db
-	$(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
-	$(CERTUTIL) -L -d nss-db -n "Cert from $<"
-	$(CERTUTIL) -D -d nss-db -n "Cert from $<"
+	$(CERTUTIL_ENV) $(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
+	$(CERTUTIL_ENV) $(CERTUTIL) -L -d nss-db -n "Cert from $<"
+	$(CERTUTIL_ENV) $(CERTUTIL) -D -d nss-db -n "Cert from $<"
 
 show2-openssl-%: certs2/%.leaf.pem certs2/%.ca.pem
 	$(OPENSSL) x509 -inform pem -in certs2/$*.ca.pem -text -noout
@@ -188,11 +205,11 @@ show-ca-cert: ca/fake-ca.cert
 nss-db:
 	mkdir -p $@
 nss-db/cert8.db : ca/fake-ca.cert | nss-db
-	$(CERTUTIL) -A -d nss-db -n "Fake CA" -t C,, -i $<
+	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -A -n "Fake CA" -t C,, -i $<
 show-nssdb-ca: nss-db/cert8.db
-	$(CERTUTIL) -d nss-db -L -n "Fake CA"
+	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -L -n "Fake CA"
 show-nssdb: nss-db/cert8.db
-	$(CERTUTIL) -d nss-db -L
+	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -L
 
 ###########################################
 # Certificate generation rules.

@@ -1,6 +1,13 @@
 # Pre-requisite software (by Debian package name)
 PREREQS=autopoint autogen cmake
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+  SO = dylib
+else
+  SO = so
+endif
+
 # Where to install build binaries/libraries etc.
 INSTROOT=$(CURDIR)/instroot
 instroot:
@@ -60,7 +67,7 @@ cfg-gnutls: gnutls/Makefile
 gnutls/build:
 	mkdir -p $@
 gnutls/Makefile: gnutls/configure instroot/lib/libnettle.a instroot/lib/libgmp.a
-	cd gnutls/ && PKG_CONFIG_PATH=$(INSTROOT)/lib/pkgconfig ./configure --prefix=$(INSTROOT) --with-included-libtasn1 --without-p11-kit --without-tpm
+	cd gnutls/ && LDFLAGS=-L$(INSTROOT)/lib PKG_CONFIG_PATH=$(INSTROOT)/lib/pkgconfig ./configure --prefix=$(INSTROOT) --with-included-libtasn1 --without-p11-kit --without-tpm --disable-crywrap --without-idn --with-libiconv=/opt/local
 bld-gnutls: gnutls/src/certtool
 gnutls/src/certtool: gnutls/Makefile
 	cd gnutls && $(MAKE)
@@ -116,17 +123,20 @@ ifeq ($(OS_ARCH),Linux)
     ifneq ($(words $(OS_RELEASE)),1)
 	OS_RELEASE := $(word 1,$(OS_RELEASE)).$(word 2,$(OS_RELEASE))
     endif
+    NSS_BLD_SUBDIR=$(OS_ARCH)$(OS_RELEASE)_x86_64_cc_glibc_PTH_64_OPT.OBJ
 endif
-NSS_BLD_SUBDIR=$(OS_ARCH)$(OS_RELEASE)_x86_64_cc_glibc_PTH_64_OPT.OBJ
+ifeq ($(OS_ARCH),Darwin)
+    NSS_BLD_SUBDIR=$(OS_ARCH)$(OS_RELEASE)_64_OPT.OBJ
+endif
 bld-nss: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil
 nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil : | nss/nss nss/nspr
 	cd nss/nss && $(NSS_VARS) $(MAKE) nss_build_all
 inst-nss: instroot/bin/certutil
-NSS_LIBS=libsmime3.so libnss3.so libnssutil3.so libplc4.so libplds4.so libnspr4.so
+NSS_LIBS=libsmime3.$(SO) libnss3.$(SO) libnssutil3.$(SO) libplc4.$(SO) libplds4.$(SO) libnspr4.$(SO) libssl3.$(SO) libsoftokn3.$(SO) libnssdbm3.$(SO)
 NSS_BLD_LIBS=$(addprefix nss/dist/$(NSS_BLD_SUBDIR)/lib/,$(NSS_LIBS))
 NSS_INST_LIBS=$(addprefix instroot/lib/,$(NSS_LIBS))
 instroot/bin/certutil: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil | $(NSS_INST_LIBS)
 	cp $< $@
-instroot/lib/%.so: nss/dist/$(NSS_BLD_SUBDIR)/lib/%.so
+instroot/lib/%.$(SO): nss/dist/$(NSS_BLD_SUBDIR)/lib/%.$(SO)
 	cp $< $@
 # Note that LD_LIBRARY_PATH=instroot/lib is needed to use the build binaries.
