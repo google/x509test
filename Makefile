@@ -9,9 +9,9 @@ ifeq ($(TLS),installed)
   # Use installed versions, assumed to be in path
   PREREQS = libnss3-tools gnutls-bin openssl
   DEPS = pkg-install
-  OPENSSL = openssl
-  CERTUTIL = certutil
-  CERTTOOL = certtool
+  OPENSSL = $(shell command -v openssl 2> /dev/null)
+  CERTUTIL = $(shell command -v certutil 2> /dev/null)
+  CERTTOOL = $(shell command -v certtool 2> /dev/null)
 else ifeq ($(TLS),stable)
   # Use local versions built from stable.  Run `make tls-stable-bld` to populate.
   DEPS = tls-stable-bld
@@ -43,9 +43,26 @@ RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
 RESULTS_NSS = $(RESULTS_NSS_OK) $(RESULTS_NSS_XF)
 
-RESULTS_OK = $(RESULTS_OPENSSL_OK) $(RESULTS_GNUTLS_OK) $(RESULTS_NSS_OK)
-RESULTS_XF = $(RESULTS_OPENSSL_XF) $(RESULTS_GNUTLS_XF) $(RESULTS_NSS_XF)
-RESULTS = $(RESULTS_OPENSSL) $(RESULTS_GNUTLS) $(RESULTS_NSS)
+ifdef OPENSSL
+RESULTS_OK += $(RESULTS_OPENSSL_OK)
+RESULTS_XF += $(RESULTS_OPENSSL_XF)
+RESULTS += $(RESULTS_OPENSSL)
+RESULTS_OK += $(RESULTS_OPENSSL_OK)
+endif
+
+ifdef CERTTOOL
+RESULTS_OK += $(RESULTS_GNUTLS_OK)
+RESULTS_XF += $(RESULTS_GNUTLS_XF)
+RESULTS += $(RESULTS_GNUTLS)
+RESULTS_OK += $(RESULTS_GNUTLS_OK)
+endif
+
+ifdef CERTUTIL
+RESULTS_OK += $(RESULTS_NSS_OK)
+RESULTS_XF += $(RESULTS_NSS_XF)
+RESULTS += $(RESULTS_NSS)
+RESULTS_OK += $(RESULTS_NSS_OK)
+endif
 
 all: check
 
@@ -79,7 +96,7 @@ deps: $(DEPS)
 pkg-install:
 	sudo apt-get install $(PREREQS)
 show-tls:
-	@echo Using: $(OPENSSL) $(CERTUTIL) $(CERTTOOL)
+	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL)
 
 ###########################################
 # TLS tool targets.
