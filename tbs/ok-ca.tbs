@@ -63,7 +63,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.15 }
         BOOLEAN { `ff` }
         OCTET_STRING {
-          BIT_STRING { `01ff` }
+          BIT_STRING { `07` `ff80` }
         }
       }
       SEQUENCE {  # Extension

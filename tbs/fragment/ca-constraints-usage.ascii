@@ -14,6 +14,6 @@
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
-          BIT_STRING { `07ff80` }
+          BIT_STRING { `07` `ff80` }  # 7 unused bits, b111111111
         }  # value
       }

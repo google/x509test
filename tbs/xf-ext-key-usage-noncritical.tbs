@@ -27,7 +27,7 @@ SEQUENCE {  # TBSCertificate
         # extKeyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         OCTET_STRING {
-          BIT_STRING { `ffff` }
+          BIT_STRING { `07` `ff80` }
         }  # value
       }
     }  # extensions

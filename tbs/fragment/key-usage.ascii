@@ -2,6 +2,6 @@
         # keyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         OCTET_STRING {
-          BIT_STRING { `0780` }  # KeyUsage
+          BIT_STRING { `07` `8000` }  # KeyUsage = b100000000 = digitalSignature
         }  # extnValue
       }

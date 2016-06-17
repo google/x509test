@@ -22,7 +22,7 @@ SEQUENCE {  # TBSCertificate
       }  # parameters
     }
     BIT_STRING {
-      `00`
+      `00`  # no unused bits at end
       INTEGER { `008061731ca0f91bb3f1b4d34fbbe6bf4a5a1ac9a544c892e53456b1c925b973db52274e4248d30bcdd1ca8e2a03bf52efbea285495e1b78d35eb187dbf2a08d3d7a8a8c62857d4d065ad81fcc2adaec32315c5f0963393496d4793f5a733de61eb7d22a672d76423ab4d92db32a317bde72c77f17b75c91cb25599ce60e281c69587d8693de96cccec4b2f3c334fecdc248233d24346e393526b4cdfd08b75c2859c36e360bf2dff188433e38fb09d13bce0d1ab91815dcc8cbe195806389c682160f26fd5239a893082233086c3ce6d34f43895e5ad8ed97a4e39aded12d664b9b119ad2cb19759eab44f4c85fa5fb8c03eaf655fe874117e6de72fafd0974fa` }  # public key
     }  # subjectPublicKey
   }  # subjectPublicKeyInfo

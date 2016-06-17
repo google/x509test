@@ -39,7 +39,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
-          BIT_STRING { `07f000` }
+          BIT_STRING { `07` `f000` }
         }  # value
       }
     }  # extensions

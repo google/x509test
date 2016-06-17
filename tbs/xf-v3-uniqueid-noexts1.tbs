@@ -20,7 +20,7 @@ SEQUENCE {  # TBSCertificate
     }
   }  # subject
   #include <public-key.ascii>
-  [2 PRIMITIVE] {  # IMPLICIT subjectUniqueId
-      BIT_STRING { `010203` }
+  [2 PRIMITIVE] {  # IMPLICIT BIT_STRING
+    `00` `010203040506`
   }  # subjectUniqueId
 }  # tbsCertificate

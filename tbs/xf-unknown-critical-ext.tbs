@@ -38,7 +38,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.15.9.9.9.9 }  # extnID = ???
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
-          BIT_STRING { `0780` }  # KeyUsage
+          BIT_STRING { `07` `8080` }
         }  # extnValue
       }
       #include <key-usage.ascii>

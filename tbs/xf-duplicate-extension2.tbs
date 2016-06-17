@@ -39,7 +39,7 @@ SEQUENCE {  # TBSCertificate
         # keyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
         OCTET_STRING {
-          BIT_STRING { `0100` }  # KeyUsage
+          BIT_STRING { `07` `0000` }  # KeyUsage
         }  # extnValue
       }
       SEQUENCE {  # Extension

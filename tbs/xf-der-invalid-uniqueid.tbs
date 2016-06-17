@@ -22,7 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [2] {
     SEQUENCE {  # UniqueIdentifier
-      BIT_STRING { `010203` }
+      BIT_STRING { `00` `010203` }
     }  # subjectUniqueId
   }
 }  # tbsCertificate
