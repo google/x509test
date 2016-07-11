@@ -35,6 +35,7 @@ _subject_re = re.compile('^subject= ' +
                          '(/L=(?P<L>[^/]+))?' +
                          '(/O=(?P<O>[^/]+))?' +
                          '(/CN=(?P<CN>[^/]+))?' +
+                         '(/emailAddress=(?P<email>[^/]+))?' +
                          '(/SN=(?P<SN>[^/]+))?' +
                          '(/dnQualifier=(?P<dnQualifier>[^/]+))?' +
                          '(/GN=(?P<GN>[^/]+))?' +
