@@ -1,0 +1,48 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.10 'Conforming ... SHOULD NOT impose name constraints on the ... registeredID name forms'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Name Constraints on registeredID" }  # value
+      }
+    }
+  }  # subject
+  #include <ca-public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <ca-constraints-usage.ascii>
+      SEQUENCE {
+        # nameConstraints
+        OBJECT_IDENTIFIER { 2.5.29.30 }  # extnID = id-ce-nameConstraints
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {  # NameConstraints
+            [0] {  # GeneralSubtrees
+              SEQUENCE {  # GeneralSubtree
+                [8 PRIMITIVE] { 2.5.29.17.11 }  # OBJECT IDENTIFIER registeredID
+              }
+            }  # permittedSubtrees
+            [1] {  # GeneralSubtrees
+              SEQUENCE {  # GeneralSubtree
+                  [8 PRIMITIVE] { 2.5.29.17.1 }  # OBJECT IDENTIFIER registeredID
+              }  # base
+            }  # excludedSubtrees
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate

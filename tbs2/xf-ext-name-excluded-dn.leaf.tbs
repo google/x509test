@@ -1,0 +1,54 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <intermediate-name.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }  # type
+        PrintableString { "US" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }  # type
+        UTF8String { "California" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }  # type
+        UTF8String { "Google Inc" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }  # type
+        UTF8String { "subdomain.google.com" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.10 'Applications conforming to this profile MUST be able to process name constraints that are imposed on the directoryName name form'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Intermediate CA signs excluded directoryName" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+    }  # extensions
+  }
+}  # tbsCertificate

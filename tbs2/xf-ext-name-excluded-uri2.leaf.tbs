@@ -1,0 +1,37 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <intermediate-name.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.10 'If ... certificate includes a subjectAltName extension with a uniformResourceIdentifier that does not include an authority component with a host name specified as a fully qualified domain name ... then the application MUST reject the certificate.'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Intermediate CA signs excluded URI missing host" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # subjectAltName
+        OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
+        OCTET_STRING {
+          SEQUENCE {  # GeneralNames
+            [6 PRIMITIVE] { "http://1.2.3.4/attempt_uri_bypass" }  # IA5String uniformResourceIdentifier
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate

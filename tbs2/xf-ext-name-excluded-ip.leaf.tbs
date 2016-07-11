@@ -1,0 +1,37 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <intermediate-name.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.10 'Applications conforming to this profile SHOULD be able to process name constraints that are imposed on the ... iPAddress name forms.'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Intermediate CA signs excluded IP" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # subjectAltName
+        OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
+        OCTET_STRING {
+          SEQUENCE {  # GeneralNames
+            [7 PRIMITIVE] { `01020304`}  # OCTET STRING iPAddress
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate

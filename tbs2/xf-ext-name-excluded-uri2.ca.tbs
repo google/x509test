@@ -1,0 +1,27 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  #include <intermediate-name.ascii>
+  #include <ca-public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <ca-constraints-usage.ascii>
+      #include <auth-key-id.ascii>
+      SEQUENCE {
+        # nameConstraints
+        OBJECT_IDENTIFIER { 2.5.29.30 }  # extnID = id-ce-nameConstraints
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {  # NameConstraints
+            [1] {  # GeneralSubtrees
+              SEQUENCE {  # GeneralSubtree
+                [6 PRIMITIVE] { "excluded.com" }  # IA5String uniformResourceIdentifier
+              }  # base
+            }  # excludedSubtrees
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
