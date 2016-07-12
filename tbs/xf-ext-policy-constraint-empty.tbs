@@ -8,14 +8,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile MUST recognize the following extensions: ...policy constraints (Section 4.2.1.11)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.11 'Conforming CAs MUST NOT issue certificates where policy constraints is an empty sequence.'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Policy Constraints extension" }  # value
+        UTF8String { "Empty Policy Constraints extension" }  # value
       }
     }
   }  # subject
@@ -29,12 +29,6 @@ SEQUENCE {  # TBSCertificate
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {  # PolicyConstraints
-            [0] {
-              INTEGER { 1 }
-            }  # requireExplicitPolicy
-            [1] {
-              INTEGER { 3 }
-            }  # inhibitPolicyMapping
           }  # extnValue
         }  # value
       }
