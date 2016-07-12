@@ -1,0 +1,44 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  #include <intermediate-name.ascii>
+  #include <ca-public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {
+        # basicConstraints
+        OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {
+            BOOLEAN { `ff` }  # cA
+            INTEGER { 0 }  # pathLenConstraint
+          }  # extnValue
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          BIT_STRING { `07` `0080` }  # 7 unused bits, b000000001
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.37 }  # extnID = id-ce-extKeyUsage
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {  # ExtKeyUsageSyntax
+            # serverAuth
+            OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.3.1 }  # KeyPurposeId
+            # clientAuth
+            OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.3.2 }  # KeyPurposeId
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate

@@ -15,7 +15,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Extended Key Usage extension (non-critical)" }  # value
+        UTF8String { "Include Extended Key Usage extension (critical)" }  # value
       }
     }
   }  # subject
@@ -26,6 +26,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # Extension
         # extKeyUsage
         OBJECT_IDENTIFIER { 2.5.29.37 }  # extnID = id-ce-extKeyUsage
+        BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {  # ExtKeyUsageSyntax
             # serverAuth
