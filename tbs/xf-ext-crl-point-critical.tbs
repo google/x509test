@@ -1,0 +1,50 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.13 'The extension SHOULD be non-critical'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "CRL Distribution Point extension marked critical" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # cRLDistributionPoints
+        OBJECT_IDENTIFIER { 2.5.29.31 }  # extnID = id-ce-cRLDistributionPoints
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {  # CRLDistributionPoints
+            SEQUENCE {  # DistributionPoint
+              [0] {  # DistributionPointName
+                [0] {  # GeneralNames
+                  [6 PRIMITIVE] { "http://pki.google.com/GIAG2.crl" }  # uniformResourceIdentifier
+                }  # fullName
+              }  # distributionPoint
+            }
+            SEQUENCE {  # DistributionPoint
+              [1 PRIMITIVE] { `07` `ff80` }  # reasons BIT_STRING, 7 unused bits, b111111111
+              [2] {  # GeneralNames
+                [6 PRIMITIVE] { "http://pki.google.com/GIAG2.crl" }  # uniformResourceIdentifier
+              }  # cRLIssuer
+            }
+          }
+        }  # extnValue
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
