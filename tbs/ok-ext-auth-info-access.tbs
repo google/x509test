@@ -1,0 +1,46 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.2.1 'The authority information access extension indicates how to access information and services for the issuer of the certificate in which the extension appears.'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Include Authority Information Access extension" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # authorityInfoAccess
+        OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.1.1 }  # extnID = id-pe-authorityInfoAccess
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityInfoAccessSyntax
+            SEQUENCE {  # AccessDescription
+              # caIssuers
+              OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.48.2 }  # accessMethod
+              [6 PRIMITIVE] { "http://pki.google.com/GIAG2.crt" }  # accessLocation
+            }
+            SEQUENCE {  # AccessDescription
+              # ocsp
+              OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.48.1 }  # accessMethod
+              [6 PRIMITIVE] { "http://clients1.google.com/ocsp" }  # accessLocation
+            }
+          }
+        }  # extnValue
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
