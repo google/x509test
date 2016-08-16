@@ -2,8 +2,8 @@ SEQUENCE {  # TBSCertificate
   #include <prologue-v3-sha256.ascii>
   #include <issuer.ascii>
   SEQUENCE {  # Validity
-    UTCTime { "1602171027Z" }  # notBefore LEAVE-AS-IS
-    UTCTime { "460517000000Z" }  # notAfter
+    UTCTime { "1602171027Z" }  # notBefore
+    UTCTime { "@GENEND@" }  # notAfter
   }  # validity
   SEQUENCE {  # Name
     #include <subject-prefix.ascii>

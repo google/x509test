@@ -2,7 +2,7 @@ SEQUENCE {  # TBSCertificate
   #include <prologue-v3-sha256.ascii>
   #include <issuer.ascii>
   SEQUENCE {  # Validity
-    UTCTime { "160217102716Z" }  # notBefore
+    UTCTime { "@GENSTART@" }  # notBefore
     GeneralizedTime { "99991231235959Z" }  # notAfter
   }  # validity
   SEQUENCE {  # Name

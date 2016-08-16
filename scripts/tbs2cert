@@ -25,6 +25,7 @@ import os.path
 import re
 import getopt
 import tempfile
+import random
 from datetime import datetime, timedelta
 
 _OPENSSL_OPTS = {
@@ -32,6 +33,7 @@ _OPENSSL_OPTS = {
     "dsa-with-sha1": "-sha1",
 }
 _INCLUDE_RE = re.compile(r'\s*#include\s+<(?P<filename>[^>]+)>\s*')
+_OID_RE = re.compile(r'^\s*OBJECT_IDENTIFIER\s+\{\s+(?P<oid>[0-9.]+)\s+\}\s*(#.*)?$')
 
 def _name_for_opt(opt):
     for n, o in _OPENSSL_OPTS.items():
@@ -49,10 +51,6 @@ def _oid_for_opt(opt):
             return o
     return None
 
-
-_OID_RE = re.compile(r'^\s*OBJECT_IDENTIFIER\s+\{\s+(?P<oid>[0-9.]+)\s+\}\s*(#.*)?$')
-_START_RE = re.compile(r'^(?P<indent>\s+)UTCTime { "\d+Z" }  # notBefore\s*$')
-_END_RE = re.compile(r'^(?P<indent>\s+)UTCTime { "\d+Z" }  # notAfter\s*$')
 
 _OID_BYTES = (
     # Named curves.
@@ -243,6 +241,12 @@ def _main(argv):
     dgst_opt = "-sha256"
     tbsdata = _expand_file(tbscert, incdir)
 
+    utcnow = datetime.utcnow()
+    start = utcnow - timedelta(60)  # 60d ago
+    start = start.strftime("%y%m%d%H%M%SZ")
+    end = utcnow + timedelta(365*3 - 180)  # Just under ~3 years ahead
+    end = end.strftime("%y%m%d%H%M%SZ")
+    serial = '%016x' % random.randrange(16**16)
     outfd, outname = tempfile.mkstemp(suffix='.tbs')
     outfile = os.fdopen(outfd, 'w')
     lines = []
@@ -262,23 +266,11 @@ def _main(argv):
                     if verbose:
                         print('Found algorithm %s (%s), unknown digest option' %
                               (oid_raw, oid_name), file=sys.stderr)
-        utcnow = datetime.utcnow()
-        start = utcnow - timedelta(60)  # 60d ago
-        end = utcnow + timedelta(365*3)  # ~3 years ahead
-        m1 = _START_RE.match(line)
-        m2 = _END_RE.match(line)
-        if m1:
-            if verbose:
-                print("Seting notBefore to %s" % start, file=sys.stderr)
-            lines.append('%sUTCTime { "%sZ" }  # notBefore' %
-                         (m1.group('indent'), start.strftime("%y%m%d%H%M%S")))
-        elif m2:
-            if verbose:
-                print("Seting notAfter to %s" % end, file=sys.stderr)
-            lines.append('%sUTCTime { "%sZ" }  # notAfter' %
-                         (m2.group('indent'), end.strftime("%y%m%d%H%M%S")))
-        else:
-            lines.append(line)
+        # Replace various @GEN<thing>@ commands
+        line = re.sub('@GENSTART@', start, line)
+        line = re.sub('@GENEND@', end, line)
+        line = re.sub('@GENSERIAL@', serial, line)
+        lines.append(line)
 
     # Send modified TBS to DER for signature.
     for line in lines:
