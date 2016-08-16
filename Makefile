@@ -217,3 +217,4 @@ distclean: clean
 	rm -rf ca
 
 .SECONDARY:  # Keep intermediates
+.NOTPARALLEL:  # NSS uses a shared cert database, so parallel cert checking causes problems

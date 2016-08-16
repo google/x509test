@@ -21,6 +21,7 @@ CERT2=$3
 OUTPUT=`$CERTUTIL -A -d nss-db -n "Cert from $CERT" -t ,, -i $CERT`
 RESULT=$?
 if [ $RESULT != 0 ]; then
+    echo "$OUTPUT"
     echo "TLS-VALIDATION: Failed"
     exit
 fi
@@ -28,6 +29,7 @@ if [ "$CERT2" != "" ]; then
     OUTPUT=`$CERTUTIL -A -d nss-db -n "Cert from $CERT2" -t ,, -i $CERT2`
     RESULT=$?
     if [ $RESULT != 0 ]; then
+        echo "$OUTPUT"
         echo "TLS-VALIDATION: Failed"
         exit
     fi
