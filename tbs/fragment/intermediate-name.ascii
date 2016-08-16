@@ -10,35 +10,35 @@
       SEQUENCE {
         # stateOrProvinceName
         OBJECT_IDENTIFIER { 2.5.4.8 }
-        UTF8String { "London" }
+        PrintableString { "London" }
       }
     }
     SET {
       SEQUENCE {
         # localityName
         OBJECT_IDENTIFIER { 2.5.4.7 }
-        UTF8String { "London" }
+        PrintableString { "London" }
       }
     }
     SET {
       SEQUENCE {
         # organizationName
         OBJECT_IDENTIFIER { 2.5.4.10 }
-        UTF8String { "Google" }
+        PrintableString { "Google" }
       }
     }
     SET {
       SEQUENCE {
         # organizationUnitName
         OBJECT_IDENTIFIER { 2.5.4.11 }
-        UTF8String { "Eng" }
+        PrintableString { "Eng" }
       }
     }
     SET {
       SEQUENCE {
         # commonName
         OBJECT_IDENTIFIER { 2.5.4.3 }
-        UTF8String { "FakeIntermediateAuthority" }
+        PrintableString { "FakeIntermediateAuthority" }
       }
     }
   }  # issuer
