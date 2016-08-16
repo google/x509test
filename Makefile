@@ -4,55 +4,30 @@
 #   `go get github.com/google/der-ascii/cmd/...`
 
 UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-  LDPATH_VAR=DYLD_LIBRARY_PATH
-else
-  LDPATH_VAR=LD_LIBRARY_PATH
-endif
 
-# Examine the TLS environment variable to determine which tools to test
-TLS ?= installed
-ifeq ($(TLS),installed)
-  # Use installed versions, assumed to be in path
-  ifeq ($(UNAME_S),Darwin)
-    PREREQS = nss gnutls openssl
-    DEPS = port-install
-    CERTTOOL = $(shell command -v gnutls-certtool 2> /dev/null)
-  else
-    PREREQS = libnss3-tools gnutls-bin openssl
-    DEPS = pkg-install
-    CERTTOOL = $(shell command -v certtool 2> /dev/null)
-  endif
-  OPENSSL = $(shell command -v openssl 2> /dev/null)
-  CERTUTIL = $(shell command -v certutil 2> /dev/null)
-else ifeq ($(TLS),stable)
-  # Use local versions built from stable.  Run `make tls-stable-bld` to populate.
-  DEPS = tls-stable-bld
-  OPENSSL = third_party/stable/instroot/bin/openssl
-  CERTUTIL_ENV = $(LDPATH_VAR)=third_party/stable/instroot/lib
-  CERTUTIL =  third_party/stable/instroot/bin/certutil
-  CERTTOOL = third_party/stable/instroot/bin/certtool
-else ifeq ($(TLS),tip)
-  # Use local versions built from stable.  Run `make tls-tip-bld` to populate.
-  DEPS = tls-tip-bld
-  OPENSSL = third_party/tip/instroot/bin/openssl
-  CERTUTIL_ENV = $(LDPATH_VAR)=third_party/tip/instroot/lib
-  CERTUTIL = third_party/tip/instroot/bin/certutil
-  CERTTOOL = third_party/tip/instroot/bin/certtool
+# Use installed versions of command line tools, assumed to be in path
+ifeq ($(UNAME_S),Darwin)
+  PREREQS = nss gnutls openssl
+  DEPS = port-install
+  CERTTOOL = $(shell command -v gnutls-certtool 2> /dev/null)
 else
-  $(error Unknown TLS tool selection $(TLS))
+  PREREQS = libnss3-tools gnutls-bin openssl
+  DEPS = pkg-install
+  CERTTOOL = $(shell command -v certtool 2> /dev/null)
 endif
+OPENSSL = $(shell command -v openssl 2> /dev/null)
+CERTUTIL = $(shell command -v certutil 2> /dev/null)
 
 TBS2_FILES = $(subst tbs2/,,$(wildcard tbs2/*.leaf.tbs))
 TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs)) $(subst .leaf.tbs,.tbs,$(TBS2_FILES))
 
-RESULTS_OPENSSL_OK = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_GNUTLS_OK = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_NSS_OK = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_OPENSSL_OK = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_GNUTLS_OK = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_NSS_OK = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
 
-RESULTS_OPENSSL_XF = $(addprefix results/openssl/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_GNUTLS_XF = $(addprefix results/gnutls/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
-RESULTS_NSS_XF = $(addprefix results/nss/$(TLS)/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_OPENSSL_XF = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_GNUTLS_XF = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_NSS_XF = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
@@ -83,24 +58,24 @@ all: check
 
 check: $(RESULTS) check-ok check-xf
 check-ok: $(RESULTS_OK)
-	@scripts/display Valid $(TLS)
+	@scripts/display Valid
 check-xf: $(RESULTS_XF)
-	@scripts/display Invalid $(TLS)
+	@scripts/display Invalid
 check-openssl: check-openssl-ok check-openssl-xf
 check-openssl-ok: $(RESULTS_OPENSSL_OK)
-	@scripts/display --tool OpenSSL Valid $(TLS)
+	@scripts/display --tool OpenSSL Valid
 check-openssl-xf: $(RESULTS_OPENSSL_XF)
-	@scripts/display --tool OpenSSL Invalid $(TLS)
+	@scripts/display --tool OpenSSL Invalid
 check-gnutls: check-gnutls-ok check-gnutls-xf
 check-gnutls-ok: $(RESULTS_GNUTLS_OK)
-	@scripts/display --tool GnuTLS Valid $(TLS)
+	@scripts/display --tool GnuTLS Valid
 check-gnutls-xf: $(RESULTS_GNUTLS_XF)
-	@scripts/display --tool GnuTLS Invalid $(TLS)
+	@scripts/display --tool GnuTLS Invalid
 check-nss: check-nss-ok check-nss-xf
 check-nss-ok: $(RESULTS_NSS_OK)
-	@scripts/display --tool NSS Valid $(TLS)
+	@scripts/display --tool NSS Valid
 check-nss-xf: $(RESULTS_NSS_XF)
-	@scripts/display --tool NSS Invalid $(TLS)
+	@scripts/display --tool NSS Invalid
 
 results-openssl: $(RESULTS_OPENSSL)
 results-gnutls: $(RESULTS_GNUTLS)
@@ -115,58 +90,41 @@ port-install:
 show-tls:
 	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL)
 
-###########################################
-# TLS tool targets.
-# Manual targets to build local copies.
-###########################################
-tls-tip-src:
-	cd third_party/tip && $(MAKE) src
-tls-tip-bld: tls-tip-src
-	cd third_party/tip && $(MAKE)
-tls-tip-inst: tls-tip-bld
-	cd third_party/tip && $(MAKE) inst
-tls-stable-src:
-	cd third_party/stable && $(MAKE) src
-tls-stable-bld: tls-stable-src
-	cd third_party/stable && $(MAKE)
-tls-stable-inst: tls-stable-bld
-	cd third_party/stable && $(MAKE) inst
-
 
 ###########################################
 # Run certs through TLS tools
 ###########################################
 results:
 	mkdir -p $@
-results/openssl/$(TLS):
+results/openssl:
 	mkdir -p $@
-results/gnutls/$(TLS):
+results/gnutls:
 	mkdir -p $@
-results/nss/$(TLS):
+results/nss:
 	mkdir -p $@
 
-results/openssl/$(TLS)/%.out: certs/%.pem ca/fake-ca.cert | results/openssl/$(TLS)
+results/openssl/%.out: certs/%.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
-results/gnutls/$(TLS)/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
+results/gnutls/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
-results/nss/$(TLS)/%.out: certs/%.pem | results/nss/$(TLS) nss-db/cert8.db
-	$(CERTUTIL_ENV) scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
+results/nss/%.out: certs/%.pem | results/nss nss-db/cert8.db
+	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 
-results/openssl/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl/$(TLS)
+results/openssl/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert -untrusted certs2/$*.ca.pem certs2/$*.leaf.pem > $@ 2>&1
-results/gnutls/$(TLS)/%.out: certs2/%.chain.pem ca/fake-ca.cert | results/gnutls/$(TLS)
+results/gnutls/%.out: certs2/%.chain.pem ca/fake-ca.cert | results/gnutls
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
-results/nss/$(TLS)/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss/$(TLS) nss-db/cert8.db
-	$(CERTUTIL_ENV) scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
+results/nss/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss nss-db/cert8.db
+	scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
 show-gnutls-%: certs/%.pem
 	$(CERTTOOL) --certificate-info --infile $<
 show-nss-%: certs/%.pem nss-db/cert8.db
-	$(CERTUTIL_ENV) $(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
-	$(CERTUTIL_ENV) $(CERTUTIL) -L -d nss-db -n "Cert from $<"
-	$(CERTUTIL_ENV) $(CERTUTIL) -D -d nss-db -n "Cert from $<"
+	$(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
+	$(CERTUTIL) -L -d nss-db -n "Cert from $<"
+	$(CERTUTIL) -D -d nss-db -n "Cert from $<"
 
 show2-openssl-%: certs2/%.leaf.pem certs2/%.ca.pem
 	$(OPENSSL) x509 -inform pem -in certs2/$*.ca.pem -text -noout
@@ -205,11 +163,11 @@ show-ca-cert: ca/fake-ca.cert
 nss-db:
 	mkdir -p $@
 nss-db/cert8.db : ca/fake-ca.cert | nss-db
-	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -A -n "Fake CA" -t C,, -i $<
+	$(CERTUTIL) -d nss-db -A -n "Fake CA" -t C,, -i $<
 show-nssdb-ca: nss-db/cert8.db
-	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -L -n "Fake CA"
+	$(CERTUTIL) -d nss-db -L -n "Fake CA"
 show-nssdb: nss-db/cert8.db
-	$(CERTUTIL_ENV) $(CERTUTIL) -d nss-db -L
+	$(CERTUTIL) -d nss-db -L
 
 ###########################################
 # Certificate generation rules.

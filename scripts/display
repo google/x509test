@@ -15,7 +15,7 @@
 
 '''Display results of tests
 
-Usage: display [opts] (Valid|Invalid) <bld>
+Usage: display [opts] (Valid|Invalid)
 
   -t <tool>  / --tool <tool>  Only display results for specific tool
   -g <pat>   / --grep <pat>   Only display results that contain pattern
@@ -41,18 +41,18 @@ _subject_re = re.compile('^subject= ' +
                          '(/GN=(?P<GN>[^/]+))?' +
                          '\s*$')
 
-def display(expect, bld, tool, grep=None):
+def display(expect, tool, grep=None):
     needle = re.compile("TLS-VALIDATION: %s" %
                         ("Failed" if expect == "Valid" else "Success"))
     prefix = "ok" if expect == "Valid" else "xf"
     subdir = tool.lower() if tool else '*'
     if grep:
-        haystack = 'results/%s/%s/%s-*%s*' % (subdir, bld, prefix, grep)
+        haystack = 'results/%s/%s-*%s*' % (subdir, prefix, grep)
     else:
-        haystack = 'results/%s/%s/%s-*' % (subdir, bld, prefix)
+        haystack = 'results/%s/%s-*' % (subdir, prefix)
     submsg = "%s " % tool if tool else ""
     fname_re = re.compile("results/(?P<subdir>\S+)/"
-                          "(?P<bld>\S+)/(?P<prefix>..)-(?P<case>.*).out")
+                          "(?P<prefix>..)-(?P<case>.*).out")
     subdirs = set()
     failures = {}  # casename => [subdir, subdir, ...]
     for filename in glob.glob(haystack):
@@ -64,7 +64,6 @@ def display(expect, bld, tool, grep=None):
             if needle.search(contents):
                 subdir = m.group('subdir')
                 subdirs.add(subdir)
-                assert bld == m.group('bld')
                 assert prefix == m.group('prefix')
                 case = m.group('case')
                 if case not in failures:
@@ -93,7 +92,7 @@ def display(expect, bld, tool, grep=None):
     subdirs = list(sorted(subdirs))
     for case in sorted(failures.keys()):
         flist = [" %-*s" % (len(s), s if s in failures[case] else '') for s in subdirs]
-        print("  %-30s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case]))
+        print("  %-35s%s  '%s'" % ('%s:' % case, "".join(flist), case_text[case]))
 
 
 if __name__ == "__main__":
@@ -117,8 +116,8 @@ if __name__ == "__main__":
             print(__doc__, file=sys.stderr)
             sys.exit(1)
 
-    if len(args) != 2:
+    if len(args) != 1:
         print(__doc__, file=sys.stderr)
         sys.exit(1)
 
-    display(args[0], args[1], tool, grep)
+    display(args[0], tool, grep)
