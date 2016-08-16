@@ -23,6 +23,9 @@ downloads:
 	mkdir -p $@
 deps:
 	mkdir -p $@
+clean: clean-openssl clean-boringssl clean-gnutls clean-nss
+distclean: distclean-openssl distclean-boringssl distclean-gnutls distclean-nss
+	rm -rf instroot deps
 
 # The following targets often pick a single file to use as a bellwether for
 # detecting that a rebuild is needed; proper dependency management is not
@@ -42,6 +45,10 @@ openssl/apps/openssl: openssl/Makefile
 inst-openssl: instroot/bin/openssl
 instroot/bin/openssl : openssl/apps/openssl | instroot/cfg
 	cd openssl && $(MAKE) install_sw
+clean-openssl:
+	cd openssl && $(MAKE) clean
+distclean-openssl::
+	rm -rf openssl
 
 ####################################
 # BoringSSL
@@ -58,6 +65,10 @@ boringssl/build/tool/bssl: boringssl/build/Makefile
 inst-boringssl: instroot/bin/bssl
 instroot/bin/bssl : boringssl/build/tool/bssl | instroot instroot/cfg
 	cp -p $< $@
+clean-boringssl::
+	cd boringssl/build && $(MAKE) clean
+distclean-boringssl::
+	rm -rf boringssl
 
 ####################################
 # GnuTLS
@@ -74,6 +85,10 @@ gnutls/src/certtool: gnutls/Makefile
 inst-gnutls: instroot/bin/certtool
 instroot/bin/certtool: gnutls/src/certtool
 	cd gnutls && $(MAKE) install-exec
+clean-gnutls: clean-gmp clean-nettle
+	cd gnutls && $(MAKE)
+distclean-gnutls:: distclean-gmp distclean-nettle
+	rm -rf gnutls
 
 ####################################
 # GnuTLS dependency: gmp
@@ -91,6 +106,10 @@ deps/$(GMP_VERSION)/libgmp.la: deps/$(GMP_VERSION)/Makefile
 	cd deps/$(GMP_VERSION) && $(MAKE)
 instroot/lib/libgmp.a: deps/$(GMP_VERSION)/libgmp.la
 	cd deps/$(GMP_VERSION) && $(MAKE) install
+clean-gmp:
+	cd deps/$(GMP_VERSION) && $(MAKE) clean
+distclean-gmp:
+	cd deps && rm -rf $(GMP_VERSION)
 
 ####################################
 # GnuTLS dependency: nettle
@@ -108,6 +127,10 @@ deps/$(NETTLE_VERSION)/libnettle.a: deps/$(NETTLE_VERSION)/Makefile
 	cd deps/$(NETTLE_VERSION) && $(MAKE)
 instroot/lib/libnettle.a: deps/$(NETTLE_VERSION)/libnettle.a
 	cd deps/$(NETTLE_VERSION) && $(MAKE) install
+clean-nettle:
+	cd deps/$(NETTLE_VERSION) && $(MAKE) clean
+distclean-nettle:
+	cd deps && rm -rf $(NETTLE_VERSION)
 
 
 ####################################
@@ -128,10 +151,12 @@ endif
 ifeq ($(OS_ARCH),Darwin)
     NSS_BLD_SUBDIR=$(OS_ARCH)$(OS_RELEASE)_64_OPT.OBJ
 endif
-bld-nss: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil
+bld-nss: src-nss nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil
 nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil : | nss/nss nss/nspr
 	cd nss/nss && $(NSS_VARS) $(MAKE) nss_build_all
-inst-nss: instroot/bin/certutil
+nss/dist/$(NSS_BLD_SUBDIR)/lib/% : | nss/nss nss/nspr
+	cd nss/nss && $(NSS_VARS) $(MAKE) nss_build_all
+inst-nss: bld-nss instroot/bin/certutil
 NSS_LIBS=libsmime3.$(SO) libnss3.$(SO) libnssutil3.$(SO) libplc4.$(SO) libplds4.$(SO) libnspr4.$(SO) libssl3.$(SO) libsoftokn3.$(SO) libnssdbm3.$(SO)
 NSS_BLD_LIBS=$(addprefix nss/dist/$(NSS_BLD_SUBDIR)/lib/,$(NSS_LIBS))
 NSS_INST_LIBS=$(addprefix instroot/lib/,$(NSS_LIBS))
@@ -140,3 +165,7 @@ instroot/bin/certutil: nss/dist/$(NSS_BLD_SUBDIR)/bin/certutil | $(NSS_INST_LIBS
 instroot/lib/%.$(SO): nss/dist/$(NSS_BLD_SUBDIR)/lib/%.$(SO)
 	cp $< $@
 # Note that LD_LIBRARY_PATH=instroot/lib is needed to use the build binaries.
+clean-nss:
+	cd nss/nss && $(NSS_VARS) $(MAKE) clean
+distclean-nss::
+	rm -rf nss

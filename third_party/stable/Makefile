@@ -3,12 +3,12 @@ all: inst
 include ../common/Makefile
 
 # Set up source trees
-src: src-openssl src-boringssl src-gnutls src-nss # src-libressl src-nss src-gnutls src-wolfssl src-mbedtls src-matrixssl src-nqsbtls
+src: src-openssl src-gnutls src-nss # src-boringssl src-libressl src-nss src-gnutls src-wolfssl src-mbedtls src-matrixssl src-nqsbtls
 # Build
-bld: bld-openssl bld-boringssl bld-gnutls bls-nss
+bld: bld-openssl bld-gnutls bls-nss
 # Install to local dir
-inst: inst-openssl inst-boringssl inst-gnutls inst-nss
-
+inst: inst-openssl inst-gnutls inst-nss
+clean: clean-openssl clean-gnutls clean-nss
 
 ####################################
 # Per-codebase targets to set up
@@ -31,6 +31,8 @@ openssl: | $(OPENSSL_VERSION)
 	ln -s $(OPENSSL_VERSION) $@
 openssl/config: | openssl
 src-openssl: openssl/config
+distclean-openssl::
+	rm -rf $(OPENSSL_VERSION)
 
 ####################################
 # BoringSSL
@@ -47,7 +49,7 @@ src-boringssl: boringssl/CMakeLists.txt
 ####################################
 # GnuTLS
 ####################################
-GNUTLS_VERSION=gnutls-3.4.11
+GNUTLS_VERSION=gnutls-3.4.14
 GNUTLS_TARBALL=$(GNUTLS_VERSION).tar.xz
 GNUTLS_URL= ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/$(GNUTLS_TARBALL)
 downloads/$(GNUTLS_TARBALL): | downloads
@@ -59,6 +61,8 @@ gnutls: $(GNUTLS_VERSION)/configure
 	ln -s $(GNUTLS_VERSION) $@
 gnutls/configure: | gnutls
 src-gnutls: gnutls/configure
+distclean-gnutls::
+	rm -rf $(GNUTLS_VERSION)
 
 ####################################
 # NSS
@@ -73,4 +77,7 @@ $(NSS_VERSION): downloads/$(NSS_TARBALL)
 nss: $(NSS_VERSION)
 	ln -s $(NSS_VERSION) nss
 nss/nss: | nss
+nss/nspr: | nss
 src-nss: nss/nss
+distclean-nss::
+	rm -rf $(NSS_VERSION)
