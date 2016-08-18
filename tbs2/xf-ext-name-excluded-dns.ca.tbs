@@ -21,17 +21,7 @@ SEQUENCE {  # TBSCertificate
             }  # permittedSubtrees
             [1] {  # GeneralSubtrees
               SEQUENCE {  # GeneralSubtree
-                [4] {
-                  SEQUENCE {  # Name
-                    SET {  # RelativeDistinguishedName
-                      SEQUENCE {  # AttributeTypeAndValue
-                        # commonName
-                        OBJECT_IDENTIFIER { 2.5.4.3 }  # type
-                        UTF8String { "subdomain.google.com" }  # value
-                      }
-                    }
-                  }
-                }  # directoryName
+                [2 PRIMITIVE] { "*.google.com" }  # dNSName
               }  # base
             }  # excludedSubtrees
           }  # extnValue
