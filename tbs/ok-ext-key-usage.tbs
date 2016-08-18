@@ -23,6 +23,7 @@ SEQUENCE {  # TBSCertificate
   [3] {
     SEQUENCE {  # Extensions
       #include <auth-key-id.ascii>
+      #include <key-usage.ascii>
       #include <ca-constraints-usage.ascii>
     }  # extensions
   }

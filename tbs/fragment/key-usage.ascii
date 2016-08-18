@@ -1,6 +1,7 @@
       SEQUENCE {  # Extension
         # keyUsage
         OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           BIT_STRING { `07` `8000` }  # KeyUsage = b100000000 = digitalSignature
         }  # extnValue
