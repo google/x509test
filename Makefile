@@ -17,6 +17,7 @@ else
 endif
 OPENSSL = $(shell command -v openssl 2> /dev/null)
 CERTUTIL = $(shell command -v certutil 2> /dev/null)
+CERTCHECK = $(shell command -v certcheck 2> /dev/null)
 
 TBS2_FILES = $(subst tbs2/,,$(wildcard tbs2/*.leaf.tbs))
 TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs)) $(subst .leaf.tbs,.tbs,$(TBS2_FILES))
@@ -24,34 +25,44 @@ TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs)) $(subst .leaf.tbs,.tbs,$(TBS2_F
 RESULTS_OPENSSL_OK = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_OK = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_OK = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_CERTCHECK_OK = $(addprefix results/certcheck/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL_XF = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_XF = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_XF = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_CERTCHECK_XF = $(addprefix results/certcheck/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
 RESULTS_NSS = $(RESULTS_NSS_OK) $(RESULTS_NSS_XF)
+RESULTS_CERTCHECK = $(RESULTS_CERTCHECK_OK) $(RESULTS_CERTCHECK_XF)
 
-ifdef OPENSSL
+ifneq ($(strip $(OPENSSL)),)
 RESULTS_OK += $(RESULTS_OPENSSL_OK)
 RESULTS_XF += $(RESULTS_OPENSSL_XF)
 RESULTS += $(RESULTS_OPENSSL)
 RESULTS_OK += $(RESULTS_OPENSSL_OK)
 endif
 
-ifdef CERTTOOL
+ifneq ($(strip $(CERTTOOL)),)
 RESULTS_OK += $(RESULTS_GNUTLS_OK)
 RESULTS_XF += $(RESULTS_GNUTLS_XF)
 RESULTS += $(RESULTS_GNUTLS)
 RESULTS_OK += $(RESULTS_GNUTLS_OK)
 endif
 
-ifdef CERTUTIL
+ifneq ($(strip $(CERTUTIL)),)
 RESULTS_OK += $(RESULTS_NSS_OK)
 RESULTS_XF += $(RESULTS_NSS_XF)
 RESULTS += $(RESULTS_NSS)
 RESULTS_OK += $(RESULTS_NSS_OK)
+endif
+
+ifneq ($(strip $(CERTCHECK)),)
+RESULTS_OK += $(RESULTS_CERTCHECK_OK)
+RESULTS_XF += $(RESULTS_CERTCHECK_XF)
+RESULTS += $(RESULTS_CERTCHECK)
+RESULTS_OK += $(RESULTS_CERTCHECK_OK)
 endif
 
 all: check
@@ -76,10 +87,16 @@ check-nss-ok: $(RESULTS_NSS_OK)
 	@scripts/display --tool NSS Valid
 check-nss-xf: $(RESULTS_NSS_XF)
 	@scripts/display --tool NSS Invalid
+check-certcheck: check-certcheck-ok check-certcheck-xf
+check-certcheck-ok: $(RESULTS_CERTCHECK_OK)
+	@scripts/display --tool certcheck Valid
+check-certcheck-xf: $(RESULTS_CERTCHECK_XF)
+	@scripts/display --tool certcheck Invalid
 
 results-openssl: $(RESULTS_OPENSSL)
 results-gnutls: $(RESULTS_GNUTLS)
 results-nss: $(RESULTS_NSS)
+results-certcheck: $(RESULTS_CERTCHECK)
 
 # deps target prepares TLS tools; it depends on the TLS env var.
 deps: $(DEPS)
@@ -88,7 +105,7 @@ pkg-install:
 port-install:
 	sudo port install $(PREREQS)
 show-tls:
-	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL)
+	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL) certcheck: $(CERTCHECK)
 
 
 ###########################################
@@ -102,6 +119,8 @@ results/gnutls:
 	mkdir -p $@
 results/nss:
 	mkdir -p $@
+results/certcheck:
+	mkdir -p $@
 
 results/openssl/%.out: certs/%.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
@@ -109,6 +128,8 @@ results/gnutls/%.out: certs/%.chain.pem ca/fake-ca.cert | results/gnutls
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
 results/nss/%.out: certs/%.pem | results/nss nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
+results/certcheck/%.out: certs/%.der ca/fake-ca.der | results/certcheck
+	scripts/check-certcheck $(CERTCHECK) --root ca/fake-ca.der $< > $@ 2>&1
 
 results/openssl/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert -untrusted certs2/$*.ca.pem certs2/$*.leaf.pem > $@ 2>&1
@@ -116,6 +137,8 @@ results/gnutls/%.out: certs2/%.chain.pem ca/fake-ca.cert | results/gnutls
 	scripts/check-certtool $(CERTTOOL) --verify-chain --load-ca-certificate ca/fake-ca.cert --infile $< >$@ 2>&1
 results/nss/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
+results/certcheck/%.out: certs2/%.leaf.der certs2/%.ca.der ca/fake-ca.der | results/certcheck
+	scripts/check-certcheck $(CERTCHECK) --root ca/fake-ca.der --intermediate certs2/$*.ca.der $< > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
@@ -125,6 +148,8 @@ show-nss-%: certs/%.pem nss-db/cert8.db
 	$(CERTUTIL) -A -d nss-db -n "Cert from $<" -t ,, -i $<
 	$(CERTUTIL) -L -d nss-db -n "Cert from $<"
 	$(CERTUTIL) -D -d nss-db -n "Cert from $<"
+show-certcheck-%: certs/%.der ca/fake-ca.der
+	$(CERTCHECK) --verbose --root ca/fake-ca.der $<
 
 show2-openssl-%: certs2/%.leaf.pem certs2/%.ca.pem
 	$(OPENSSL) x509 -inform pem -in certs2/$*.ca.pem -text -noout
