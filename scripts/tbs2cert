@@ -246,7 +246,9 @@ def _main(argv):
     start = start.strftime("%y%m%d%H%M%SZ")
     end = utcnow + timedelta(365*3 - 180)  # Just under ~3 years ahead
     end = end.strftime("%y%m%d%H%M%SZ")
-    serial = '0%015x' % random.randrange(16**15)
+    # Start with octet 01 to ensure serial number is positive and is
+    # minimally-encoded (for DER validity).
+    serial = '01%014x' % random.randrange(16**14)
     outfd, outname = tempfile.mkstemp(suffix='.tbs')
     outfile = os.fdopen(outfd, 'w')
     lines = []
