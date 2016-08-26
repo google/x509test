@@ -1,0 +1,36 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC3279 s2.3.5" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "ECDSA public key with unknown namedCurve" }  # value
+      }
+    }
+  }  # subject
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # ecPublicKey
+      OBJECT_IDENTIFIER { 1.2.840.10045.2.1 }  # algorithm
+      # namedCurve
+      OBJECT_IDENTIFIER { 1.2.840.10045.3.1.99.99.99 }  # parameters
+    }  # algorithm
+    BIT_STRING {
+      `00`  # no trailing pad bits
+      `04`  # 4=uncompressed point
+      `c4093984f5158d1254b2029cf901e26d3547d40dd011616609351dcb121495b2`  # X
+      `3fff35bd228e4dfc38502d22d6981ecaa023afa4967e32d1825f3157fb28ff37`  # Y
+    }
+  }  # subjectPublicKeyInfo
+}  # tbsCertificate
