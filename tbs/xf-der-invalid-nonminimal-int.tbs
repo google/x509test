@@ -1,5 +1,13 @@
 SEQUENCE {  # TBSCertificate
-  #include <prologue-v3-sha256.ascii>
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `00001234` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature
   #include <issuer.ascii>
   #include <validity.ascii>
   SEQUENCE {  # Name
@@ -15,15 +23,16 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Invalid SEQUENCE wrapper for subjectUniqueID" }  # value
+        UTF8String { "Non-minimal INTEGER in DER for serialNumber" }  # value
       }
     }
   }  # subject
   #include <public-key.ascii>
-  [2] {
-    # subjectUniqueId is IMPLICIT so should be directly encoded rather than in an inner SEQUENCE
-    SEQUENCE {  # UniqueIdentifier
-      BIT_STRING { `00` `010203` }
-    }  # subjectUniqueId
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <key-usage.ascii>
+    }  # extensions
   }
 }  # tbsCertificate
+

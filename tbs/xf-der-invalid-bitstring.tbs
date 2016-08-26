@@ -15,15 +15,12 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Invalid SEQUENCE wrapper for subjectUniqueID" }  # value
+        UTF8String { "Invalid DER (trailing 1) for BIT_STRING" }  # value
       }
     }
   }  # subject
   #include <public-key.ascii>
-  [2] {
-    # subjectUniqueId is IMPLICIT so should be directly encoded rather than in an inner SEQUENCE
-    SEQUENCE {  # UniqueIdentifier
-      BIT_STRING { `00` `010203` }
-    }  # subjectUniqueId
-  }
+  [2 PRIMITIVE] {  # IMPLICIT BIT_STRING
+    `01` `0305`  # b0000.0011.0000.010x, with x=1
+  }  # subjectUniqueId
 }  # tbsCertificate
