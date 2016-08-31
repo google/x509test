@@ -8,14 +8,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.1.2.14 'Conforming CAs MUST mark this extension as critical.'" }  # value
+        UTF8String { "RFC5280 s4.1.2.14 'SkipCerts ::= INTEGER (0..MAX)'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Inhibit Any Policy extension marked non-critical" }  # value
+        UTF8String { "Inhibit Any Policy extension with negative skip" }  # value
       }
     }
   }  # subject
@@ -27,8 +27,9 @@ SEQUENCE {  # TBSCertificate
         SEQUENCE {
           # inhibitAnyPolicy
           OBJECT_IDENTIFIER { 2.5.29.54 }
+          BOOLEAN { `ff` }
           OCTET_STRING {
-            INTEGER { 0 }
+            INTEGER { -2 }
           }
         }
     }  # extensions
