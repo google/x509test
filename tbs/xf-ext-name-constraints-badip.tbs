@@ -32,7 +32,7 @@ SEQUENCE {  # TBSCertificate
           SEQUENCE {  # NameConstraints
             [0] {  # GeneralSubtrees
               SEQUENCE {  # GeneralSubtree
-                  [8 PRIMITIVE] { 2.5.29.17.11 }  # OBJECT IDENTIFIER registeredID
+                [8 PRIMITIVE] { 2.5.29.17.11 }  # OBJECT IDENTIFIER registeredID
               }
             }  # permittedSubtrees
             [1] {  # GeneralSubtrees

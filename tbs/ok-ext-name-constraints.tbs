@@ -34,10 +34,57 @@ SEQUENCE {  # TBSCertificate
               SEQUENCE {  # GeneralSubtree
                 [2 PRIMITIVE] { "*.google.co.uk" }  # base = dNSName
               }
+              SEQUENCE {  # GeneralSubtree
+                [8 PRIMITIVE] { 2.5.29.17.11 }  # OBJECT IDENTIFIER registeredID
+              }
+              SEQUENCE {  # GeneralSubtree
+                [7 PRIMITIVE] { `01020304ffffff00`}  # OCTET STRING iPAddress
+              }
+              SEQUENCE {  # GeneralSubtree
+                [1 PRIMITIVE] { "someone@example.com" }  # IA5String rfc822Name
+              }
+              SEQUENCE {  # GeneralSubtree
+                [0] {  # OtherName
+                  OBJECT_IDENTIFIER { 1.2.3.4 }
+                  [0] {
+                    UTF8String { "some other identifier" }
+                  }
+                }  # otherName
+              }
+              SEQUENCE {  # GeneralSubtree
+                [4] {
+                  SEQUENCE {  # Name
+                    SET {  # RelativeDistinguishedName
+                      SEQUENCE {  # AttributeTypeAndValue
+                        # countryName
+                        OBJECT_IDENTIFIER { 2.5.4.6 }  # type
+                        PrintableString { "US" }  # value
+                      }
+                    }
+                    SET {  # RelativeDistinguishedName
+                      SEQUENCE {  # AttributeTypeAndValue
+                        # localityName
+                        OBJECT_IDENTIFIER { 2.5.4.7 }  # type
+                        UTF8String { "Mountain View" }  # value
+                      }
+                    }
+                    SET {  # RelativeDistinguishedName
+                      SEQUENCE {  # AttributeTypeAndValue
+                        # organizationName
+                        OBJECT_IDENTIFIER { 2.5.4.10 }  # type
+                        UTF8String { "Google Inc" }  # value
+                      }
+                    }
+                  }  # directoryName
+                }
+              }
+              SEQUENCE {  # GeneralSubtree
+                [6 PRIMITIVE] { "http://example.com" }  # IA5String uniformResourceIdentifier
+              }
             }  # permittedSubtrees
             [1] {  # GeneralSubtrees
               SEQUENCE {  # GeneralSubtree
-                [2 PRIMITIVE] { "*.google.com" }  # dNSName
+                [2 PRIMITIVE] { "*.google.com" }  # base = dNSName
               }  # base
             }  # excludedSubtrees
           }  # extnValue
