@@ -1,6 +1,6 @@
 SEQUENCE {  # TBSCertificate
   [0] {  # ENUMERATED
-    INTEGER { 1 }  # v2
+    INTEGER { 0 }  # v1
   }  # version
   INTEGER { `42822a5b866fbfeb` }  # serialNumber
   SEQUENCE {  # AlgorithmIdentifier
@@ -16,14 +16,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s3.1 'When X.500 was revised in 1993, two more fields were added, resulting in the version 2 (v2) format.'" }  # value
+        UTF8String { "RFC5280 s3.1 'The certificate format in the 1988 standard is called the version 1 (v1) format'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Version 2 certificate" }  # value
+        UTF8String { "Version 1 certificate" }  # value
       }
     }
   }  # subject
