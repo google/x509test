@@ -9,6 +9,8 @@ prompt              = no
 default_md          = sha256
 # Extension to add when the -x509 option is used.
 x509_extensions     = v3_ca
+# Try to force use of PrintableString throughout
+string_mask         = pkix
 
 [ req_distinguished_name ]
 C=GB
