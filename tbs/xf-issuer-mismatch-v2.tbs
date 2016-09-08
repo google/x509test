@@ -1,0 +1,74 @@
+SEQUENCE {  # TBSCertificate
+  [0] {  # ENUMERATED
+    INTEGER { 1 }  # v2
+  }  # version
+  INTEGER { `@GENSERIAL@` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature
+  SEQUENCE {  # Name
+    SET {
+      SEQUENCE {
+        # countryName
+        OBJECT_IDENTIFIER { 2.5.4.6 }
+        PrintableString { "GB" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # stateOrProvinceName
+        OBJECT_IDENTIFIER { 2.5.4.8 }
+        PrintableString { "London" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # localityName
+        OBJECT_IDENTIFIER { 2.5.4.7 }
+        PrintableString { "Victoria" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationName
+        OBJECT_IDENTIFIER { 2.5.4.10 }
+        PrintableString { "Google" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # organizationUnitName
+        OBJECT_IDENTIFIER { 2.5.4.11 }
+        PrintableString { "Eng" }
+      }
+    }
+    SET {
+      SEQUENCE {
+        # commonName
+        OBJECT_IDENTIFIER { 2.5.4.3 }
+        PrintableString { "FakeCertificateAuthority" }
+      }
+    }
+  }  # issuer
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s6.1.3 a.4 'The certificate MUST satisfy...certificate issuer name is the working_issuer_name'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Issuer localityName doesn't match" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+}  # tbsCertificate
