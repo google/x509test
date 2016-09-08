@@ -26,4 +26,9 @@ SEQUENCE {  # TBSCertificate
       BIT_STRING { `00` `010203` }
     }  # subjectUniqueId
   }
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+    }  # extensions
+  }
 }  # tbsCertificate

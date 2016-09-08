@@ -23,4 +23,9 @@ SEQUENCE {  # TBSCertificate
   [2 PRIMITIVE] {  # IMPLICIT BIT_STRING
     `01` `0305`  # b0000.0011.0000.010x, with x=1
   }  # subjectUniqueId
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+    }  # extensions
+  }
 }  # tbsCertificate

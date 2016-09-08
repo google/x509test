@@ -33,4 +33,9 @@ SEQUENCE {  # TBSCertificate
       `3fff35bd228e4dfc38502d22d6981ecaa023afa4967e32d1825f3157fb28ff37`  # Y
     }
   }  # subjectPublicKeyInfo
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+    }  # extensions
+  }
 }  # tbsCertificate
