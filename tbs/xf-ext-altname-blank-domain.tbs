@@ -8,8 +8,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2.1.6 'subjectAltName extensions with a dNSName of ' ' MUST NOT be used
-'" }  # value
+        UTF8String { "RFC5280 s4.2.1.6 'subjectAltName extensions with a dNSName of ' ' MUST NOT be used'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
