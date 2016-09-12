@@ -26,7 +26,8 @@ SEQUENCE {  # TBSCertificate
       #include <key-usage.ascii>
       SEQUENCE {  # Extension
         # keyUsage
-        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage, this one is non-critical
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage, this one has fewer bits
+        BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           BIT_STRING { `07` `0000` }  # KeyUsage
         }  # extnValue
