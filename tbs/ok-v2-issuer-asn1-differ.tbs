@@ -66,7 +66,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Name with different ASN1 type but should still match in v2 cert" }  # value
+        UTF8String { "Issuer uses different ASN1 type, no AuthorityKeyID (as V2)" }  # value
       }
     }
   }  # subject

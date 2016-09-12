@@ -35,9 +35,6 @@ SEQUENCE {  # TBSCertificate
                 [2 PRIMITIVE] { "*.google.co.uk" }  # base = dNSName
               }
               SEQUENCE {  # GeneralSubtree
-                [8 PRIMITIVE] { 2.5.29.17.11 }  # OBJECT IDENTIFIER registeredID
-              }
-              SEQUENCE {  # GeneralSubtree
                 [7 PRIMITIVE] { `01020304ffffff00`}  # OCTET STRING iPAddress
               }
               SEQUENCE {  # GeneralSubtree
