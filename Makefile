@@ -231,6 +231,14 @@ certs2/%.chain.pem: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert
 ###########################################
 # Tidy-up.
 ###########################################
+clean-openssl:
+	rm -rf results/openssl
+clean-gnutls:
+	rm -rf results/gnutls
+clean-nss:
+	rm -rf results/nss
+clean-certcheck:
+	rm -rf results/certcheck
 clean:
 	rm -f scripts/*.pyc
 	rm -rf results
