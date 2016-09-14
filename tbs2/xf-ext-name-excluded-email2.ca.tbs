@@ -8,6 +8,7 @@ SEQUENCE {  # TBSCertificate
     SEQUENCE {  # Extensions
       #include <ca-constraints-usage.ascii>
       #include <auth-key-id.ascii>
+      #include <subject-key-id.ascii>
       SEQUENCE {
         # nameConstraints
         OBJECT_IDENTIFIER { 2.5.29.30 }  # extnID = id-ce-nameConstraints
