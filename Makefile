@@ -169,7 +169,7 @@ ca/%.public.pem: ca/%.private.pem
 	$(OPENSSL) rsa -pubout -in $< -out $@
 # Generate a self-signed certificate.
 ca/fake-ca.cert: ca/fake-ca.private.pem cfg/fake-ca.cnf
-	$(OPENSSL) req -new -x509 -config cfg/fake-ca.cnf -days 365 -extensions v3_ca -inform pem -key $< -out $@
+	$(OPENSSL) req -new -x509 -config cfg/fake-ca.cnf -set_serial 0x0406cafe -days 365 -extensions v3_ca -inform pem -key $< -out $@
 ca/fake-ca.der: ca/fake-ca.cert
 	$(OPENSSL) x509 -in $< -outform der -out $@
 ca/fake-ca.ascii: ca/fake-ca.der

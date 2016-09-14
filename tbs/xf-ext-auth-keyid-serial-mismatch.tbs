@@ -8,14 +8,14 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # surname
         OBJECT_IDENTIFIER { 2.5.4.4 }  # type
-        UTF8String { "RFC5280 s4.2 'applications conforming to this profile SHOULD recognize the authority ... key identifier (Section 4.2.1.1...)'" }  # value
+        UTF8String { "RFC5280 s4.2.1.1 'The authority key identifier extension provides a means of identifying the public key corresponding to the private key used to sign a certificate'" }  # value
       }
     }
     SET {  # RelativeDistinguishedName
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Include Authority Key Identifier extension" }  # value
+        UTF8String { "Authority Key Id with mismatched serial number" }  # value
       }
     }
   }  # subject
@@ -32,7 +32,7 @@ SEQUENCE {  # TBSCertificate
                [6 PRIMITIVE] { "http://bobs-dodgy-certs.com" }  # uniformResourceIdentifier
             }  # authorityCertIssuer
             [2 PRIMITIVE] {  # CertificateSerialNumber
-              `0406cafe`
+              `04069999`  # MISMATCH
             }  # authorityCertSerialNumber
           }
         }  # extnValue

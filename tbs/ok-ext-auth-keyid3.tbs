@@ -29,7 +29,7 @@ SEQUENCE {  # TBSCertificate
           SEQUENCE {  # AuthorityKeyIdentifier
             [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
             [2 PRIMITIVE] {  # CertificateSerialNumber
-              `012233445566`
+              `0406cafe`
             }  # authorityCertSerialNumber
           }
         }  # extnValue
