@@ -1,0 +1,48 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "X.690 s11.2.2 'Where [NamedBitList] applies, the bitstring shall have all trailing 0 bits removed before it is encoded.'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Key Usage including trailing zero bits" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <subject-key-id.ascii>
+      SEQUENCE {
+        # basicConstraints
+        OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          SEQUENCE {
+            BOOLEAN { `ff` }  # cA
+            INTEGER { 0 }  # pathLenConstraint
+          }  # extnValue
+        }  # value
+      }
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+          BIT_STRING { `07` `8400` }  # 7 unused bits, b100001000
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
