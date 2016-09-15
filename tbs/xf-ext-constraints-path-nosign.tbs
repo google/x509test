@@ -34,14 +34,7 @@ SEQUENCE {  # TBSCertificate
           }  # extnValue
         }  # value
       }
-      SEQUENCE {  # Extension
-        # extKeyUsage
-        OBJECT_IDENTIFIER { 2.5.29.15 }  # extnID = id-ce-keyUsage
-        BOOLEAN { `ff` }  # critical
-        OCTET_STRING {
-          BIT_STRING { `07` `f000` }
-        }  # value
-      }
+      #include <key-usage.ascii>
     }  # extensions
   }
 }  # tbsCertificate
