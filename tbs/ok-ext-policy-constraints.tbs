@@ -29,11 +29,11 @@ SEQUENCE {  # TBSCertificate
         BOOLEAN { `ff` }  # critical
         OCTET_STRING {
           SEQUENCE {  # PolicyConstraints
-            [0] {
-              INTEGER { 1 }
+            [0 PRIMITIVE] {
+              `01`
             }  # requireExplicitPolicy
-            [1] {
-              INTEGER { 3 }
+            [1 PRIMITIVE] {
+              `03`
             }  # inhibitPolicyMapping
           }  # extnValue
         }  # value

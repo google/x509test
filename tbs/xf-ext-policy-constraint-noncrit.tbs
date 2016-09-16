@@ -28,11 +28,11 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.36 }  # extnID = id-ce-policyConstraints
         OCTET_STRING {
           SEQUENCE {  # PolicyConstraints
-            [0] {
-              INTEGER { 1 }
+            [0 PRIMITIVE] {
+              `01`
             }  # requireExplicitPolicy
-            [1] {
-              INTEGER { 3 }
+            [1 PRIMITIVE] {
+              `03`
             }  # inhibitPolicyMapping
           }  # extnValue
         }  # value
