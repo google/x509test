@@ -18,6 +18,7 @@ endif
 OPENSSL = $(shell command -v openssl 2> /dev/null)
 CERTUTIL = $(shell command -v certutil 2> /dev/null)
 CERTCHECK = $(shell command -v certcheck 2> /dev/null)
+GOX509 = $(shell command -v ./bin/gox509 2> /dev/null)
 
 TBS2_FILES = $(subst tbs2/,,$(wildcard tbs2/*.leaf.tbs))
 TBS_FILES = $(subst tbs/,,$(wildcard tbs/*.tbs)) $(subst .leaf.tbs,.tbs,$(TBS2_FILES))
@@ -26,16 +27,19 @@ RESULTS_OPENSSL_OK = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES
 RESULTS_GNUTLS_OK = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_OK = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_CERTCHECK_OK = $(addprefix results/certcheck/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_GOX509_OK = $(addprefix results/gox509/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL_XF = $(addprefix results/openssl/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_GNUTLS_XF = $(addprefix results/gnutls/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_NSS_XF = $(addprefix results/nss/,$(subst .tbs,.out, $(TBS_FILES)))
 RESULTS_CERTCHECK_XF = $(addprefix results/certcheck/,$(subst .tbs,.out, $(TBS_FILES)))
+RESULTS_GOX509_XF = $(addprefix results/gox509/,$(subst .tbs,.out, $(TBS_FILES)))
 
 RESULTS_OPENSSL = $(RESULTS_OPENSSL_OK) $(RESULTS_OPENSSL_XF)
 RESULTS_GNUTLS = $(RESULTS_GNUTLS_OK) $(RESULTS_GNUTLS_XF)
 RESULTS_NSS = $(RESULTS_NSS_OK) $(RESULTS_NSS_XF)
 RESULTS_CERTCHECK = $(RESULTS_CERTCHECK_OK) $(RESULTS_CERTCHECK_XF)
+RESULTS_GOX509 = $(RESULTS_GOX509_OK) $(RESULTS_GOX509_XF)
 
 ifneq ($(strip $(OPENSSL)),)
 RESULTS_OK += $(RESULTS_OPENSSL_OK)
@@ -65,6 +69,13 @@ RESULTS += $(RESULTS_CERTCHECK)
 RESULTS_OK += $(RESULTS_CERTCHECK_OK)
 endif
 
+ifneq ($(strip $(GOX509)),)
+RESULTS_OK += $(RESULTS_GOX509_OK)
+RESULTS_XF += $(RESULTS_GOX509_XF)
+RESULTS += $(RESULTS_GOX509)
+RESULTS_OK += $(RESULTS_GOX509_OK)
+endif
+
 all: check
 
 check: $(RESULTS) check-ok check-xf
@@ -92,11 +103,17 @@ check-certcheck-ok: $(RESULTS_CERTCHECK_OK)
 	@scripts/display --tool certcheck Valid
 check-certcheck-xf: $(RESULTS_CERTCHECK_XF)
 	@scripts/display --tool certcheck Invalid
+check-gox509: check-gox509-ok check-gox509-xf
+check-gox509-ok: $(RESULTS_GOX509_OK)
+	@scripts/display --tool gox509 Valid
+check-gox509-xf: $(RESULTS_GOX509_XF)
+	@scripts/display --tool gox509 Invalid
 
 results-openssl: $(RESULTS_OPENSSL)
 results-gnutls: $(RESULTS_GNUTLS)
 results-nss: $(RESULTS_NSS)
 results-certcheck: $(RESULTS_CERTCHECK)
+results-gox509: $(RESULTS_GOX509)
 
 # deps target prepares TLS tools; it depends on the TLS env var.
 deps: $(DEPS)
@@ -105,7 +122,7 @@ pkg-install:
 port-install:
 	sudo port install $(PREREQS)
 show-tls:
-	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL) certcheck: $(CERTCHECK)
+	@echo Using: OpenSSL: $(OPENSSL) GnuTLS: $(CERTTOOL) NSS: $(CERTUTIL) certcheck: $(CERTCHECK) gox509: $(GOX509)
 
 
 ###########################################
@@ -129,6 +146,8 @@ results/nss:
 	mkdir -p $@
 results/certcheck:
 	mkdir -p $@
+results/gox509:
+	mkdir -p $@
 
 results/openssl/%.out: certs/%.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert $< > $@ 2>&1
@@ -138,6 +157,8 @@ results/nss/%.out: certs/%.pem | results/nss nss-db/cert8.db
 	scripts/check-certutil $(CERTUTIL) $< > $@ 2>&1
 results/certcheck/%.out: certs/%.der ca/fake-ca.der | results/certcheck
 	scripts/check-certcheck $(CERTCHECK) --root ca/fake-ca.der $< > $@ 2>&1
+results/gox509/%.out: certs/%.der ca/fake-ca.der | results/gox509
+	scripts/check-certcheck $(GOX509) --root ca/fake-ca.der $< > $@ 2>&1
 
 results/openssl/%.out: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert | results/openssl
 	scripts/check-openssl $(OPENSSL) verify -x509_strict -CAfile ca/fake-ca.cert -untrusted certs2/$*.ca.pem certs2/$*.leaf.pem > $@ 2>&1
@@ -147,6 +168,8 @@ results/nss/%.out: certs2/%.leaf.pem certs2/%.ca.pem | results/nss nss-db/cert8.
 	scripts/check-certutil $(CERTUTIL) $^ > $@ 2>&1
 results/certcheck/%.out: certs2/%.leaf.der certs2/%.ca.der ca/fake-ca.der | results/certcheck
 	scripts/check-certcheck $(CERTCHECK) --root ca/fake-ca.der --intermediate certs2/$*.ca.der $< > $@ 2>&1
+results/gox509/%.out: certs2/%.leaf.der certs2/%.ca.der ca/fake-ca.der | results/gox509
+	scripts/check-certcheck $(GOX509) --root ca/fake-ca.der --intermediate certs2/$*.ca.der $< > $@ 2>&1
 
 show-openssl-%: certs/%.pem
 	$(OPENSSL) x509 -inform pem -in $< -text -noout
@@ -158,6 +181,8 @@ show-nss-%: certs/%.pem nss-db/cert8.db
 	$(CERTUTIL) -D -d nss-db -n "Cert from $<"
 show-certcheck-%: certs/%.der ca/fake-ca.der
 	$(CERTCHECK) --verbose --root ca/fake-ca.der $<
+show-gox509-%: certs/%.der ca/fake-ca.der
+	$(GOX509) --verbose --root ca/fake-ca.der $<
 
 show2-openssl-%: certs2/%.leaf.pem certs2/%.ca.pem
 	$(OPENSSL) x509 -inform pem -in certs2/$*.ca.pem -text -noout
@@ -247,6 +272,8 @@ clean-nss:
 	rm -rf results/nss
 clean-certcheck:
 	rm -rf results/certcheck
+clean-gox509:
+	rm -rf results/gox509
 clean:
 	rm -f scripts/*.pyc
 	rm -rf results
@@ -256,6 +283,7 @@ clean:
 
 distclean: clean
 	rm -rf ca
+	rm -rf bin
 
 .SECONDARY:  # Keep intermediates
 .NOTPARALLEL:  # NSS uses a shared cert database, so parallel cert checking causes problems
