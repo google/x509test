@@ -109,6 +109,14 @@ show-tls:
 
 
 ###########################################
+# Build a wrapper around the Go x509 library
+###########################################
+bin:
+	mkdir -p $@
+bin/gox509: src/gox509/gox509.go | bin
+	cd bin && go build ../src/gox509/gox509.go
+
+###########################################
 # Run certs through TLS tools
 ###########################################
 results:
