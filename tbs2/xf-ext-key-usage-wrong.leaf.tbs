@@ -22,6 +22,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
+      #include <auth-key-id-int.ascii>
     }  # extensions
   }
 }  # tbsCertificate

@@ -1,0 +1,9 @@
+      SEQUENCE {  # Extension
+        # authorityKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityKeyIdentifier
+            [0 PRIMITIVE] { `dbf46e63eee2dcbebf38604f9831d06444f163d8` }  # KeyIdentifier
+          }
+        }  # extnValue
+      }

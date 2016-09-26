@@ -112,13 +112,7 @@ SEQUENCE {  # TBSCertificate
           }
         }  # extnValue
       }
-      SEQUENCE {  # Extension
-        # subjectKeyIdentifier
-        OBJECT_IDENTIFIER { 2.5.29.14 }  # extnID = id-ce-subjectKeyIdentifier
-        OCTET_STRING {
-          OCTET_STRING { `dbf46e63eee2dcbebf38604f9831d06444f163d8` }  # SubjectKeyIdentifier
-        }  # extnValue
-      }
+      #include <auth-key-id-int.ascii>
       SEQUENCE {  # Extension
         # basicConstraints
         OBJECT_IDENTIFIER { 2.5.29.19 }  # extnID = id-ce-basicConstraints

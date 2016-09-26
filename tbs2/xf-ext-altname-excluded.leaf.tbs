@@ -49,7 +49,7 @@ SEQUENCE {  # TBSCertificate
   #include <public-key.ascii>
   [3] {
     SEQUENCE {  # Extensions
-      #include <auth-key-id.ascii>
+      #include <auth-key-id-int.ascii>
       SEQUENCE {  # Extension
         # subjectAltName
         OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
