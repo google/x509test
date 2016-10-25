@@ -1,0 +1,36 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC6962 s3.1 'Precertificate is constructed ... by adding a special critical poison extension ... to ensure that the Precertificate cannot be validated by a standard X.509v3 client'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Include Certificate Transparency poison extension" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <key-usage.ascii>
+      SEQUENCE {  # Extension
+        OBJECT_IDENTIFIER { 1.3.6.1.4.1.11129.2.4.3 }  # extnID = CT poison
+        BOOLEAN { `ff` }  # critical
+        OCTET_STRING {
+           NULL {}
+        }  # extnValue
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
