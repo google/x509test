@@ -238,7 +238,7 @@ certs/%.ascii: tbs/%.tbs ca/fake-ca.private.pem scripts/tbs2cert | certs
 certs/%.der: certs/%.ascii
 	ascii2der -i $< -o $@
 certs/%.pem: certs/%.der
-	$(OPENSSL) x509 -in $< -inform der -out $@
+	scripts/der2pem $< > $@
 certs/%.chain.pem: certs/%.pem ca/fake-ca.cert
 	cat $< ca/fake-ca.cert > $@
 # Rules for certs signed by intermediate CA
@@ -256,7 +256,7 @@ certs2/ok-inherited-keyparams.leaf.ascii: tbs2/ok-inherited-keyparams.leaf.tbs c
 certs2/%.der: certs2/%.ascii
 	ascii2der -i $< -o $@
 certs2/%.pem: certs2/%.der
-	$(OPENSSL) x509 -in $< -inform der -out $@
+	scripts/der2pem $< > $@
 certs2/%.chain.pem: certs2/%.leaf.pem certs2/%.ca.pem ca/fake-ca.cert
 	cat $^ > $@
 
