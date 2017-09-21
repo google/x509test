@@ -1,7 +1,8 @@
-ca/
 *.pyc
-nss-db/
-certs/
-certs2/
-results/
-bin/
+/bin/
+/ca/
+/certs/
+/certs2/
+/nss-db/
+/results/
+/gox509
