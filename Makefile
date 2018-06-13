@@ -2,6 +2,8 @@
 
 # Prerequisite: der2ascii and ascii2der from:
 #   `go get github.com/google/der-ascii/cmd/...`
+# Optional: certcheck from:
+#   `go get github.com/google/certificate-transparency-go/x509util/certcheck`
 
 UNAME_S := $(shell uname -s)
 

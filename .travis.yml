@@ -8,9 +8,9 @@ addons:
       - libnss3-tools
 
 install:
-  - go get github.com/google/der-ascii/...
-  - go install github.com/google/der-ascii/cmd/ascii2der
-  - go install github.com/google/der-ascii/cmd/der2ascii
+  - go get github.com/google/der-ascii/cmd/ascii2der
+  - go get github.com/google/der-ascii/cmd/der2ascii
+  - go get github.com/google/certificate-transparency-go/x509util/certcheck
 script:
   - make bin/gox509
   - make
