@@ -1,0 +1,43 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.1 'authorityCertIssuer [1] GeneralNames OPTIONAL'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Authority Key Id with invalid issuer" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      SEQUENCE {  # Extension
+        # authorityKeyIdentifier
+        OBJECT_IDENTIFIER { 2.5.29.35 }  # extnID = id-ce-authorityKeyIdentifier
+        OCTET_STRING {
+          SEQUENCE {  # AuthorityKeyIdentifier
+            [0 PRIMITIVE] { `01020304` }  # KeyIdentifier
+            [1] {  # GeneralNames
+               [6 PRIMITIVE] { "http://bobs-dodgy-certs.com" }  # uniformResourceIdentifier
+               [7 PRIMITIVE] { `7f00000102`}  # OCTET STRING iPAddress
+            }  # authorityCertIssuer
+            [2 PRIMITIVE] {  # CertificateSerialNumber
+              `0406cafe`
+            }  # authorityCertSerialNumber
+          }
+        }  # extnValue
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
