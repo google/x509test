@@ -16,7 +16,7 @@
 # Wrapper for certcheck, to ensure a validation result is recorded
 CERTCHECK=$1
 shift
-OUTPUT=`$CERTCHECK $*`
+OUTPUT=$(${CERTCHECK} $* 2>&1)
 RESULT=$?
 echo "$OUTPUT"
 SEENERR=`echo "$OUTPUT" | grep error`
@@ -28,5 +28,3 @@ if [ $RESULT -ne 0 ]; then
 else
     echo "TLS-VALIDATION: Success"
 fi
-
-
