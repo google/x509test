@@ -1,0 +1,41 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5480 s2.1.1.1 secp192r1" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "ECDSA public key using secp192r1 (too short)" }  # value
+      }
+    }
+  }  # subject
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # ecPublicKey
+      OBJECT_IDENTIFIER { 1.2.840.10045.2.1 }  # algorithm
+      # namedCurve=secp192r1
+      OBJECT_IDENTIFIER { 1.2.840.10045.3.1.1 }  # parameters
+    }
+    BIT_STRING {
+      `00`  # no trailing pad bits
+      `04`  # 4=uncompressed point
+      `6950d6b2223d861cdea8834be39f73151a4ab250d4a0ba6b`  # X
+      `924dbffb03b10256d572bc24eaa2d33d4c261ee1e5a045e3`  # Y
+    }
+  }
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+    }  # extensions
+  }
+}  # tbsCertificate
