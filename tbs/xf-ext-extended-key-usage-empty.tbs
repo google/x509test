@@ -1,0 +1,34 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.12 'ExtKeyUsageSyntax ::= SEQUENCE SIZE (1..MAX) OF KeyPurposeId'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Empty Extended Key Usage extension" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # extKeyUsage
+        OBJECT_IDENTIFIER { 2.5.29.37 }  # extnID = id-ce-extKeyUsage
+        OCTET_STRING {
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
