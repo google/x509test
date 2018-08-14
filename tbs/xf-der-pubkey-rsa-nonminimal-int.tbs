@@ -1,0 +1,50 @@
+SEQUENCE {  # TBSCertificate
+  [0] {  # ENUMERATED
+    INTEGER { 2 }  # v3
+  }  # version
+  INTEGER { `1234` }  # serialNumber
+  SEQUENCE {  # AlgorithmIdentifier
+    # sha256WithRSAEncryption
+    OBJECT_IDENTIFIER { 1.2.840.113549.1.1.11 }  # algorithm
+    NULL {}  # parameters
+  }  # signature
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 appendix A" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Non-minimal INTEGER in DER for public key" }  # value
+      }
+    }
+  }  # subject
+  SEQUENCE {  # SubjectPublicKeyInfo
+    SEQUENCE {  # AlgorithmIdentifier
+      # rsaEncryption
+      OBJECT_IDENTIFIER { 1.2.840.113549.1.1.1 }
+      NULL {}
+    }
+    BIT_STRING {
+      `00`
+      SEQUENCE {
+        INTEGER { `008dad2d1861ddbe719d2c7641eb7db645db6d3bd86872445902e2d88547e69d33b734a81b772a3f5f6fa29663d6eec00870f6a1ddffff1d9354682cfb0e86bd54d510a2297b77ba06fa749784311ba9ca9f4eb5c46ece55dcb9d1b698c60482d988e8205d4934007add7d08bb8232e9778e770c5f0c811676ec1745c906d3e10a641642206824ab97b2604ea96df04f3c18018f2c9431ac5b3ab46e6000b2bd1ad8aa3a9391d448951c15559d59cb82b6b5ebd0133a51ef4ef4ef60f621bbb191ce39541e86aece0490457df91fc9e88dae02e7381d0ec0c66f954a42f9892f588073dfc6f9d4041e7de860b4cce958bd3e1685fe795a95a01b9f17f101b45baf` }
+        INTEGER { `00010001` }
+      }
+    }
+  } # subjectPublicKeyInfo
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      #include <key-usage.ascii>
+    }  # extensions
+  }
+}  # tbsCertificate
