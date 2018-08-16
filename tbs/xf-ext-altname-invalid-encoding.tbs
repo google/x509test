@@ -1,0 +1,37 @@
+SEQUENCE {  # TBSCertificate
+  #include <prologue-v3-sha256.ascii>
+  #include <issuer.ascii>
+  #include <validity.ascii>
+  SEQUENCE {  # Name
+    #include <subject-prefix.ascii>
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # surname
+        OBJECT_IDENTIFIER { 2.5.4.4 }  # type
+        UTF8String { "RFC5280 s4.2.1.6 'the domain name MUST be stored in the dNSName (an IA5String)'" }  # value
+      }
+    }
+    SET {  # RelativeDistinguishedName
+      SEQUENCE {  # AttributeTypeAndValue
+        # givenName
+        OBJECT_IDENTIFIER { 2.5.4.42 }  # type
+        UTF8String { "Subject Alternative Name with invalid domain encoding (ISO-8859-1)" }  # value
+      }
+    }
+  }  # subject
+  #include <public-key.ascii>
+  [3] {
+    SEQUENCE {  # Extensions
+      #include <auth-key-id.ascii>
+      SEQUENCE {  # Extension
+        # subjectAltName
+        OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
+        OCTET_STRING {
+          SEQUENCE {  # GeneralNames
+            [2 PRIMITIVE] { "g\xd5\xd5gle.com" }  # IA5String dNSName
+          }  # extnValue
+        }  # value
+      }
+    }  # extensions
+  }
+}  # tbsCertificate
