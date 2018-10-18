@@ -15,7 +15,7 @@ SEQUENCE {  # TBSCertificate
       SEQUENCE {  # AttributeTypeAndValue
         # givenName
         OBJECT_IDENTIFIER { 2.5.4.42 }  # type
-        UTF8String { "Subject Alternative Name with invalid domain" }  # value
+        UTF8String { "Subject Alternative Name with invalid domain name character" }  # value
       }
     }
   }  # subject
@@ -28,7 +28,7 @@ SEQUENCE {  # TBSCertificate
         OBJECT_IDENTIFIER { 2.5.29.17 }  # extnID = id-ce-subjectAltName
         OCTET_STRING {
           SEQUENCE {  # GeneralNames
-            [2 PRIMITIVE] { "*.123google.com" }  # IA5String dNSName
+            [2 PRIMITIVE] { "@.123google.com" }  # IA5String dNSName
           }  # extnValue
         }  # value
       }
