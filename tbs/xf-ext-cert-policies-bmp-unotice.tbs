@@ -34,7 +34,7 @@ SEQUENCE {  # TBSCertificate
                 SEQUENCE {  # PolicyQualifierInfo
                   OBJECT_IDENTIFIER { 1.3.6.1.5.5.7.2.2 }  # policyQualifierId = id-qt-unotice
                   SEQUENCE {  # UserNotice
-                    BMPString { "User notice" }  # explicitText
+                    BMPString { `00550073006500720020006e006f0074006900630065` }  # explicitText: "User notice" in UTF-16BE
                   }  # userNotice
                 }  # policyQualifiers[0]
               }  # policyQualifiers
