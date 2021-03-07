@@ -39,7 +39,7 @@ The project is organized as follows.
 
  - The `tbs/` directory holds the test certificates, in the form of ASCII
    files suitable for feeding to the
-   [`ascii2der`]((https://github.com/google/der-ascii) tool. These
+   [`ascii2der`](https://github.com/google/der-ascii) tool. These
    certificates are in the form of the `TBSCertificate` ASN.1 type, and they
    pull in shared common fragments (from the `tbs/fragment/` subdirectory)
    using a `#include` extension to the ASCII format.
